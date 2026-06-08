@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+
+# Swift / SwiftPM
+.build/
+.swiftpm/
+Packages/
+*.xcodeproj
+
+# Xcode
+xcuserdata/
+DerivedData/
+*.xcuserstate
+
+# NOTE: __Cassettes__/ is intentionally NOT ignored.
+# Recorded tapes are committed fixtures — that's what lets CI replay them.
