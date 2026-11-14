@@ -40,7 +40,7 @@ under Assay:
 ➡️ Strategic read: **don't compete with Apple's Evaluations. Complement it.** Assay becomes
 the *deterministic, offline* layer (mocks, availability, cassettes, CI, drift) that plugs
 *into* Apple's `LanguageModel` protocol and can feed Apple's `Evaluations`.
-See [pending.md](pending.md) for the decision this forces.
+See [decisions/0001-positioning.md](decisions/0001-positioning.md) for the decision this forced.
 
 ---
 
