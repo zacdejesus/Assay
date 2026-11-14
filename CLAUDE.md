@@ -3,12 +3,14 @@
 > Read this before doing anything in this repo. It defines how AI assistance works here.
 
 ## What this project is
-**Assay** — an AI-native testing & eval library for Swift: test Apple FoundationModels and
-cloud-LLM features deterministically, offline, and free. See [README](README.md) for the vision.
+**Assay** — the memory and regression detector for Apple's language models: it records what
+the model answered, replays it offline, and reports what changed when Apple ships a new model.
+See [README](README.md) and [docs/roadmap.md](docs/roadmap.md).
 
 ## Why it exists
-**This is a learning project.** The point is for me (Alejandro) to *learn* — Swift, SDK
-design, on-device AI, testing discipline — by building it myself. Understanding beats shipping fast.
+**This is a learning project.** I'm an experienced iOS developer; the point is for me
+(Alejandro) to *learn* what is new to me — FoundationModels, evals, SDK design, testing
+non-deterministic systems — by building it myself. Understanding beats shipping fast.
 
 ## The working agreement (the important part)
 
@@ -38,8 +40,10 @@ design, on-device AI, testing discipline — by building it myself. Understandin
 
 ## Tech context
 - Swift 6, Swift Package Manager, Swift Testing.
-- Targets Apple platforms; will integrate FoundationModels (on-device) and possibly
-  AnyLanguageModel (cloud) later — as optional adapters behind a small protocol seam.
+- OS 27+ only ([decision 0002](docs/decisions/0002-minimum-os.md)). Builds on Apple's
+  `LanguageModel` protocol and feeds Apple's `Evaluations`; no own seam, matchers or judge
+  ([decision 0001](docs/decisions/0001-positioning.md)).
 
 ## Status
-Foundation only: this file, `README.md`, `.gitignore`. **No code yet** — I build it from scratch.
+M0 (spike) is closed: findings in `docs/notes/foundationmodels.md`, experiments kept as
+characterization tests in `Tests/`. Library code starts in M1.
