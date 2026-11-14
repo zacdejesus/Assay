@@ -15,9 +15,9 @@ Assay records what the model answered, replays it offline, and tells you what ch
 
 You ship a feature built on Apple's `FoundationModels`. Then:
 
-- **The model changes under you.** New model assets arrive with OS updates and also on their
-  own schedule (see [what M0 found](#what-m0-found)). Nothing tells you that your prompts now
-  behave differently.
+- **The model changes under you.** Apple ships new model assets with its updates, and the assets
+  carry their own version numbers, separate from the OS build (see
+  [what M0 found](#what-m0-found)). Nothing tells you that your prompts now behave differently.
 - **Tests that call the real model are slow and non-deterministic**, and they only run on a
   machine with Apple Intelligence.
 - **Apple's `Evaluations` framework needs a live model**, so the same limits apply to your evals.
