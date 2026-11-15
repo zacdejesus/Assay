@@ -12,8 +12,13 @@ All notable changes to Assay are documented here. The format is loosely based on
 - Roadmap v2, the positioning decision (0001) and a prior-art snapshot.
 - `Package.swift` (OS 27+, decision 0002) and the M0 spike: Experiments A and B as
   characterization tests, with findings in `docs/notes/`.
+- Experiment C: greedy and fixed-seed sampling are repeatable on the on-device model;
+  `assetIDs` and `jsonString` need normalising before comparison.
+- Model canary test, baseline recording and comparison (`Baselines/`), and `scripts/test.sh`.
 
 ### Changed
 - README rewritten to match roadmap v2.
+- Experiment A: an empty response throws `LanguageModelError.unsupportedTranscriptContent`
+  since macOS 27.2 (was `GeneratedContent.ParsingError`).
 
 _The library itself starts in M1._

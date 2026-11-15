@@ -1,11 +1,11 @@
 # Environment
 
-> Checked 2026-11-07. Re-check after any OS or Xcode update.
+> Checked 2026-11-15. After any OS or Xcode update, follow the [update routine](#update-routine).
 
 | What | Value |
 |---|---|
 | Mac | Apple M4 (Apple Intelligence eligible) |
-| macOS | 27.0.1 (26A434). Was 26.6.2 on 2026-09-22. |
+| macOS | 27.2 (26B123), seen 2026-11-15. Was 27.0.1 (26A434) on 2026-11-07 and 26.6.2 on 2026-09-22. |
 | Xcode | 27.1 (27A9275) |
 | Swift | 6.4 (swiftlang-6.4.0.34.1), SwiftPM 6.4.0-dev |
 | Apple Intelligence | Enabled on this Mac |
@@ -30,3 +30,54 @@
   (it never touches `SystemLanguageModel`), but the proof is a run with it disabled, or CI.
 - Swift Testing prints `Target Platform: arm64e-apple-macos14.0` although the package targets
   macOS 27. Tests using OS 27 APIs pass, so it doesn't block anything. Cause unknown.
+
+## Model versions seen on this Mac
+
+The model assets come from `Transcript.Response.assetIDs`. Only the main model asset is listed;
+the tokenizer and the draft model have their own versions.
+
+| Seen | macOS | Main model asset |
+|---|---|---|
+| 2026-11-07 | 27.0.1 (26A434) | `...fm_api_generic_3b?variant=generic_sparse_16.1.0.13.103120,0` |
+| 2026-11-15 | 27.2 (26B123) | `...fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0` |
+
+The system and the model changed between the two checks. Nothing was recorded from the first
+model, so how it answered can't be compared any more. Baselines exist from the second one on.
+
+## Update routine
+
+A device holds one version of the model. Once an update replaces it, the old one can't be asked
+again. So:
+
+**Before installing an OS update**
+
+```sh
+scripts/test.sh before-update   # records what the current model answers into Baselines/
+```
+
+Commit the new file in `Baselines/`. Keep automatic OS updates off, so the model changes when
+you choose.
+
+**After installing it**
+
+```sh
+scripts/test.sh after-update    # canary, full live suite, new baseline, comparison
+```
+
+Then:
+- If the canary failed, the model changed: put the new IDs in `knownAssetIDs`
+  (`Tests/AssayTests/ModelCanaryTests.swift`).
+- If a characterization test failed, the framework's behavior changed: update the test and
+  write down what changed in [foundationmodels.md](foundationmodels.md).
+- Add a row to the table above and update the versions at the top of this file.
+
+## Running the tests
+
+| Command | What it runs | Needs the model |
+|---|---|---|
+| `scripts/test.sh` | Unit tests | No |
+| `scripts/test.sh live` | Everything | Yes |
+| `scripts/test.sh greedy` | Experiment C: repeatability of greedy and seeded sampling (about 3 minutes) | Yes |
+| `scripts/test.sh canary` | Has the model changed since the last check? | Yes |
+| `scripts/test.sh record` | Writes a baseline for the current model | Yes |
+| `scripts/test.sh compare` | Compares the two most recent baselines | No |

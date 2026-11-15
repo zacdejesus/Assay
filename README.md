@@ -72,9 +72,13 @@ Who else works in this space: [docs/prior-art.md](docs/prior-art.md).
 Needs macOS 27 and Xcode 27.
 
 ```sh
-swift test                                    # Experiment A: fake model, no live model used
-ASSAY_LIVE=1 swift test --filter ExperimentB  # Experiment B: calls the real model, needs Apple Intelligence
+scripts/test.sh          # unit tests: fake model, no live model used
+scripts/test.sh live     # everything, including the tests that call the real model
+scripts/test.sh greedy   # Experiment C: is greedy sampling repeatable?
 ```
+
+The live modes need Apple Intelligence. All modes, and what to do before and after an OS
+update, are in [docs/notes/environment.md](docs/notes/environment.md).
 
 ## What Assay is not
 
