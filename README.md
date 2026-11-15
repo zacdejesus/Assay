@@ -8,8 +8,8 @@ someone recorded it.
 
 Assay records what the model answered, replays it offline, and tells you what changed.
 
-> 🚧 **Status: early.** The M0 spike is done and its findings are below. The library itself
-> starts in M1, so there is nothing to add as a dependency yet.
+> 🚧 **Status: early.** The M0 spike is done and its findings are below. M1 is in progress:
+> `FakeModel` exists (see [below](#fakemodel)); cassettes and the drift report don't yet.
 
 ## The problem
 
@@ -53,12 +53,33 @@ SDK evidence in [docs/notes/foundationmodels.md](docs/notes/foundationmodels.md)
 The experiments stay in the repo as characterization tests: if a new OS changes the behaviour
 Assay depends on, the failing test names the assumption that broke.
 
+## FakeModel
+
+A scripted model that backs a real `LanguageModelSession`, for unit tests that run in
+milliseconds without Apple Intelligence.
+
+```swift
+import Assay
+
+let model = FakeModel("Boil water.", "Add pasta.")
+let session = LanguageModelSession(model: model)
+
+let first = try await session.respond(to: "Step one?")   // "Boil water."
+
+#expect(model.calls.count == 1)
+#expect(model.calls[0].prompt == "Step one?")
+```
+
+Responses are used once each, in order; a call after the last one fails with a message that
+says so. It also scripts JSON for `@Generable` types, errors and latency. Design notes:
+[docs/decisions/0003-fakemodel-api.md](docs/decisions/0003-fakemodel-api.md).
+
 ## Roadmap
 
 | Milestone | What | Status |
 |---|---|---|
 | M0 | Spike: can I plug into Apple's protocol at all? | ✅ done |
-| M1 | `FakeModel` and availability simulation (v0.1) | next |
+| M1 | `FakeModel` and availability simulation (v0.1) | in progress: `FakeModel` done |
 | M2 | Cassette: record once, replay with provenance (v0.2) | |
 | M3 | Bridge to Apple's `Evaluations`, offline (v0.3) | |
 | M4 | Drift report (v0.4) | |
@@ -88,8 +109,9 @@ update, are in [docs/notes/environment.md](docs/notes/environment.md).
 
 ## How this is built
 
-I design and write the library code myself and use AI as a reviewer. The working agreement
-is in [CLAUDE.md](CLAUDE.md).
+I make the design decisions and review every line. AI assistance is used for spikes,
+implementation and documentation; the decisions and their reasons are written down in
+[docs/decisions](docs/decisions).
 
 ## License
 
