@@ -5,6 +5,7 @@
 // Assay's design depends on (findings in docs/notes/foundationmodels.md). If a new OS
 // changes any of it, the failing test names the assumption that broke.
 
+import Foundation
 import FoundationModels
 import Testing
 
@@ -91,16 +92,25 @@ struct ExperimentATests {
     /// This behavior changed between OS releases. On macOS 27.0.1 the session threw
     /// `GeneratedContent.ParsingError` ("Session ended without producing a response.").
     /// Since macOS 27.2 it throws `LanguageModelError.unsupportedTranscriptContent`
-    /// ("The model produced an empty response."). This test pins the current behavior.
-    @Test("An executor that sends nothing makes the session throw unsupportedTranscriptContent")
-    func silentExecutorThrowsUnsupportedTranscriptContent() async throws {
+    /// ("The model produced an empty response."). This test pins both, by OS version,
+    /// because it also runs on CI machines whose macOS may be older than this Mac's.
+    /// Where exactly between 27.0.1 and 27.2 the change happened is not known.
+    @Test("An executor that sends nothing makes the session throw")
+    func silentExecutorThrows() async throws {
         let session = LanguageModelSession(model: HelloModel(behavior: .silent))
-        let error = await #expect(throws: LanguageModelError.self) {
-            try await session.respond(to: "hi")
-        }
-        guard case .unsupportedTranscriptContent = try #require(error) else {
-            Issue.record("Expected .unsupportedTranscriptContent, got \(String(describing: error))")
-            return
+        let changed = OperatingSystemVersion(majorVersion: 27, minorVersion: 2, patchVersion: 0)
+        if ProcessInfo.processInfo.isOperatingSystemAtLeast(changed) {
+            let error = await #expect(throws: LanguageModelError.self) {
+                try await session.respond(to: "hi")
+            }
+            guard case .unsupportedTranscriptContent = try #require(error) else {
+                Issue.record("Expected .unsupportedTranscriptContent, got \(String(describing: error))")
+                return
+            }
+        } else {
+            await #expect(throws: GeneratedContent.ParsingError.self) {
+                try await session.respond(to: "hi")
+            }
         }
     }
 

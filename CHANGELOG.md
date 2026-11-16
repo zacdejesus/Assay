@@ -17,6 +17,7 @@ All notable changes to Assay are documented here. The format is loosely based on
 - Model canary test, baseline recording and comparison (`Baselines/`), and `scripts/test.sh`.
 - `FakeModel`: a scripted `LanguageModel` for unit tests, with text, chunked, JSON and failing
   responses, simulated latency, a per-request closure and a call log (decision 0003).
+- CI: unit tests on GitHub Actions, on a runner without Apple Intelligence.
 
 ### Changed
 - README rewritten to match roadmap v2.

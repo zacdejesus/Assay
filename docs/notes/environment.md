@@ -24,10 +24,18 @@
   the framework search path. Running a full `Evaluation` from the command line is still
   unverified (M3).
 
+## CI
+
+GitHub Actions runs `scripts/test.sh` on every pull request and on pushes to `main`
+(`.github/workflows/tests.yml`), on the `xcode-27` runner image. Checked 2026-11-16: the runner
+had macOS 27.2 (26B123) and Xcode 27.1, and reported the on-device model as
+`unavailable(deviceNotEligible)`.
+
+That answers a question that was open here: **the unit tests, `FakeModel` included, pass on a
+machine without Apple Intelligence.** The live tests don't run in CI.
+
 ## Still unverified
 
-- Does the fake model (Experiment A) pass with Apple Intelligence **off**? Almost certainly
-  (it never touches `SystemLanguageModel`), but the proof is a run with it disabled, or CI.
 - Swift Testing prints `Target Platform: arm64e-apple-macos14.0` although the package targets
   macOS 27. Tests using OS 27 APIs pass, so it doesn't block anything. Cause unknown.
 
