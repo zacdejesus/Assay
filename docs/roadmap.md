@@ -129,14 +129,14 @@ the fake first builds the replay engine.
 - API design: `public` surface, naming, defaults. DocC.
 
 **Build**
-- [ ] `FakeModel`: a `LanguageModel` with scripted responses: fixed, queue, or closure
+- [x] `FakeModel`: a `LanguageModel` with scripted responses: fixed, queue, or closure
       `(request) -> response`.
-- [ ] Simulated errors (`LanguageModelError` cases: `contextSizeExceeded`,
+- [x] Simulated errors (`LanguageModelError` cases: `contextSizeExceeded`,
       `guardrailViolation`, `rateLimited`, …) and simulated latency.
-- [ ] Call recording: assert which prompts were sent, how many times.
-- [ ] **Availability simulation** (every unavailable reason + transitions such as
-      `modelNotReady` → `available`). Its shape depends on what M0 found (is availability
-      on the protocol or only on `SystemLanguageModel`?).
+- [x] Call recording: assert which prompts were sent, how many times.
+- [x] **Availability simulation** (every unavailable reason + transitions such as
+      `modelNotReady` → `available`). M0 found it only on `SystemLanguageModel`, so it is a separate
+      type, `AvailabilityScript` ([decision 0004](decisions/0004-availability-simulation.md)).
 - [ ] Example app: test that the fallback UI appears when the model is unavailable.
 
 **Decide**

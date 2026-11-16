@@ -11,7 +11,8 @@ someone recorded it.
 Assay records what the model answered, replays it offline, and tells you what changed.
 
 > 🚧 **Status: early.** The M0 spike is done and its findings are below. M1 is in progress:
-> `FakeModel` exists (see [below](#fakemodel)); cassettes and the drift report don't yet.
+> `FakeModel` and `AvailabilityScript` exist (see [below](#fakemodel)); cassettes and the
+> drift report don't yet.
 
 ## The problem
 
@@ -76,12 +77,32 @@ Responses are used once each, in order; a call after the last one fails with a m
 says so. It also scripts JSON for `@Generable` types, errors and latency. Design notes:
 [docs/decisions/0003-fakemodel-api.md](docs/decisions/0003-fakemodel-api.md).
 
+## AvailabilityScript
+
+Tests the screens an app shows when the model can't be used. The app reads availability through
+a closure of its own, written with Apple's type, so Assay never ships in the app:
+
+```swift
+// App
+var availability: () -> SystemLanguageModel.Availability = {
+    SystemLanguageModel.default.availability
+}
+
+// Test
+let script = AvailabilityScript(.unavailable(.modelNotReady), .available)
+viewModel.availability = script.next
+// First read: still downloading. Every read after that: available.
+```
+
+Design notes:
+[docs/decisions/0004-availability-simulation.md](docs/decisions/0004-availability-simulation.md).
+
 ## Roadmap
 
 | Milestone | What | Status |
 |---|---|---|
 | M0 | Spike: can I plug into Apple's protocol at all? | ✅ done |
-| M1 | `FakeModel` and availability simulation (v0.1) | in progress: `FakeModel` done |
+| M1 | `FakeModel` and availability simulation (v0.1) | in progress: example app left |
 | M2 | Cassette: record once, replay with provenance (v0.2) | |
 | M3 | Bridge to Apple's `Evaluations`, offline (v0.3) | |
 | M4 | Drift report (v0.4) | |
