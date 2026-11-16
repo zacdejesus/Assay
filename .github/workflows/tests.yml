@@ -1,0 +1,33 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit:
+    name: Unit tests (no live model)
+    # Assay needs the macOS 27 SDK. This image has Xcode 27 on macOS 27 (Apple Silicon).
+    # Hosted runners don't have Apple Intelligence, which is the point: these tests must
+    # pass without it. The live tests are skipped unless ASSAY_LIVE=1.
+    runs-on: xcode-27
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Toolchain
+        run: |
+          sw_vers
+          xcodebuild -version
+          swift --version
+
+      - name: Unit tests
+        run: scripts/test.sh
