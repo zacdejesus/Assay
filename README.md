@@ -1,5 +1,7 @@
 # Assay 🧪
 
+[![Tests](https://github.com/zacdejesus/Assay/actions/workflows/tests.yml/badge.svg)](https://github.com/zacdejesus/Assay/actions/workflows/tests.yml)
+
 **The memory and regression detector for Apple's language models.**
 
 Apple updates its on-device model without asking you, and only one version lives on a device
