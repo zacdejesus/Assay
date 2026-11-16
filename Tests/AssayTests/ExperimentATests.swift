@@ -88,11 +88,19 @@ struct ExperimentATests {
         #expect(response.content == "hello")
     }
 
-    @Test("An executor that sends nothing makes the session throw ParsingError")
-    func silentExecutorThrowsParsingError() async {
+    /// This behavior changed between OS releases. On macOS 27.0.1 the session threw
+    /// `GeneratedContent.ParsingError` ("Session ended without producing a response.").
+    /// Since macOS 27.2 it throws `LanguageModelError.unsupportedTranscriptContent`
+    /// ("The model produced an empty response."). This test pins the current behavior.
+    @Test("An executor that sends nothing makes the session throw unsupportedTranscriptContent")
+    func silentExecutorThrowsUnsupportedTranscriptContent() async throws {
         let session = LanguageModelSession(model: HelloModel(behavior: .silent))
-        await #expect(throws: GeneratedContent.ParsingError.self) {
+        let error = await #expect(throws: LanguageModelError.self) {
             try await session.respond(to: "hi")
+        }
+        guard case .unsupportedTranscriptContent = try #require(error) else {
+            Issue.record("Expected .unsupportedTranscriptContent, got \(String(describing: error))")
+            return
         }
     }
 

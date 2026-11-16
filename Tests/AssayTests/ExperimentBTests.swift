@@ -7,7 +7,6 @@
 // Live test: it calls the real model, so it's opt-in. Run it with
 //   ASSAY_LIVE=1 swift test --filter ExperimentB
 
-import Foundation
 import FoundationModels
 import Testing
 
@@ -56,12 +55,9 @@ struct ExperimentBTests {
         }
     }
 
-    static let liveEnabled = ProcessInfo.processInfo.environment["ASSAY_LIVE"] == "1"
-        && SystemLanguageModel.default.isAvailable
-
     @Test(
         "A wrapper forwards the real model, and the transcript records its provenance",
-        .enabled(if: liveEnabled, "Live test: needs ASSAY_LIVE=1 and Apple Intelligence")
+        .enabled(if: Live.isEnabled, "Live test: needs ASSAY_LIVE=1 and Apple Intelligence")
     )
     func wrapperForwardsRealModel() async throws {
         let session = LanguageModelSession(model: WrappingModel())

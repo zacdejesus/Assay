@@ -30,7 +30,7 @@ LanguageModelSession(model:)
 | Question | Answer |
 |---|---|
 | Can a custom `LanguageModel` back a real session in a unit test? | **Yes.** `fakeModelAnswersHello` passes in ~1 ms. |
-| Executor sends nothing? | Throws `GeneratedContent.ParsingError`: "Session ended without producing a response." |
+| Executor sends nothing? | Throws. On macOS 27.0.1: `GeneratedContent.ParsingError`, "Session ended without producing a response." Since macOS 27.2: `LanguageModelError.unsupportedTranscriptContent`, "The model produced an empty response." |
 | What's in the request? | `request.transcript` (instructions, prompts, earlier responses), `schema`, `generationOptions`, `enabledToolDefinitions`, `contextOptions`, `metadata`, `id`. All public. |
 | Does the transcript accumulate? | **Yes.** The second call's request holds `Prompt first, Response hello, Prompt second`. |
 | Are capabilities enforced? | **Yes.** A `@Generable` request to a model without `.guidedGeneration` throws `LanguageModelError.unsupportedCapability` **before** `respond` is called. |
@@ -67,3 +67,46 @@ confirms the prior-art worry: the model can change without an OS update, so prov
 - Errors come from two types: `LanguageModelError` (capabilities, context, guardrails, rate
   limits) and `GeneratedContent.ParsingError` (no or unparseable output). A fake must be able to
   simulate both.
+
+## Experiment C: is the output repeatable? (2026-11-15, macOS 27.2)
+
+Evidence: `Tests/AssayTests/ExperimentCTests.swift` (`scripts/test.sh greedy`). Each request was
+sent 20 times, each time in a new session, with `maximumResponseTokens: 120`.
+
+| Sampling | Short prompt | Open prompt | Structured (`@Generable`) |
+|---|---|---|---|
+| Default (`samplingMode: nil`) | not run | 20 distinct answers of 20 | not run |
+| `.greedy` | 1 of 20 | 1 of 20 | 1 of 20 |
+| `.random(top: 50, seed: 42)` | 1 of 20 | 1 of 20 | 1 of 20 |
+
+- **The control works.** Default sampling gave 20 different answers on the open prompt, so the
+  test can see variation, and "1 of 20" means something.
+- **Greedy is repeatable**, also across processes (six runs in two separate processes gave the
+  same SHA-256; checked with a one-off script, not pinned in a test).
+- **A fixed seed is repeatable too**, and seeds 42 and 43 give different answers, so the seed is
+  really used. A tape recorded with random sampling must store the seed and `top`.
+- **Limits of this result:** one Mac, one model version, three prompts. Not checked: across
+  devices, across model versions (by definition), long outputs, tool calls.
+
+Two things have to be normalised before comparing anything:
+
+- **`assetIDs` has no stable order.** The same three assets (tokenizer, model, draft model) come
+  back in a different order from one response to the next. Sort them.
+- **`GeneratedContent.jsonString` has no stable key order.** The same structured answer comes
+  back as `{"highlights": …, "lengthInKilometers": …, "name": …}` or with the keys in another
+  order. Re-serialize with sorted keys (or compare the decoded value).
+
+Both matter for M2: a cassette key, a tape's provenance and a drift comparison must all use the
+normalised form, or two recordings of the same answer from the same model will look different.
+
+## What changed with macOS 27.2
+
+Found on 2026-11-15, after this Mac went from 27.0.1 (26A434) to 27.2 (26B123):
+
+- The model assets changed: the main model went from `…generic_sparse_16.1.0.13.103120` to
+  `…generic_sparse_16.1000.0.13.103404`. The system and the model changed together here, so
+  this is not evidence that the model updates without an OS update.
+- An executor that sends nothing now makes the session throw
+  `LanguageModelError.unsupportedTranscriptContent` instead of `GeneratedContent.ParsingError`.
+  The characterization test in Experiment A caught it. A fake model's "no response left"
+  failure (M1) can't rely on either error type staying the same.
