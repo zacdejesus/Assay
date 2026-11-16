@@ -1,0 +1,72 @@
+{
+  "assay" : "0.2.0-dev",
+  "interactions" : [
+    {
+      "key" : "42d6e47fab3ff5d8adb1634b642719459bfb08c8a08b91ae23ddf7ce323b2988",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_3b.fm_api_generic.draft?variant=generic_sparse_16.1000.81614.13.205144,0",
+          "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
+          "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
+        ],
+        "recordedAt" : "2026-11-16T18:33:35Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "systemVersion" : "Version 27.2 (Build 26B123)"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "instructions" : "Answer in one short sentence.",
+        "options" : {
+          "maximumResponseTokens" : 60
+        },
+        "prompt" : "What is the capital of France?"
+      },
+      "response" : {
+        "outputTokens" : 15,
+        "text" : "The capital of France is Paris."
+      }
+    },
+    {
+      "key" : "a712f3de110fce190a67626e32d1efe9073f42a23159f986f2f013d6df1e3236",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_3b.fm_api_generic.draft?variant=generic_sparse_16.1000.81614.13.205144,0",
+          "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
+          "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
+        ],
+        "recordedAt" : "2026-11-16T18:33:36Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "systemVersion" : "Version 27.2 (Build 26B123)"
+      },
+      "request" : {
+        "history" : [
+          {
+            "role" : "prompt",
+            "text" : "What is the capital of France?"
+          },
+          {
+            "role" : "response",
+            "text" : "The capital of France is Paris."
+          }
+        ],
+        "instructions" : "Answer in one short sentence.",
+        "options" : {
+          "maximumResponseTokens" : 60
+        },
+        "prompt" : "And of Italy?"
+      },
+      "response" : {
+        "outputTokens" : 15,
+        "text" : "The capital of Italy is Rome."
+      }
+    }
+  ],
+  "machine" : "Mac16,12",
+  "version" : 1
+}

@@ -1,0 +1,73 @@
+{
+  "assay" : "0.2.0-dev",
+  "interactions" : [
+    {
+      "key" : "67a58aef427c81f9b3fc44a18732be7e8f03ffb864873c2c8d5aa6ff52206942",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_3b.fm_api_generic.draft?variant=generic_sparse_16.1000.81614.13.205144,0",
+          "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
+          "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
+        ],
+        "recordedAt" : "2026-11-16T18:33:37Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "systemVersion" : "Version 27.2 (Build 26B123)"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "options" : {
+          "includeSchemaInPrompt" : true,
+          "maximumResponseTokens" : 120
+        },
+        "prompt" : "Describe a hiking trail in a pine forest.",
+        "schema" : {
+          "additionalProperties" : false,
+          "properties" : {
+            "highlights" : {
+              "items" : {
+                "type" : "string"
+              },
+              "type" : "array"
+            },
+            "lengthInKilometers" : {
+              "type" : "integer"
+            },
+            "name" : {
+              "type" : "string"
+            }
+          },
+          "required" : [
+            "name",
+            "lengthInKilometers",
+            "highlights"
+          ],
+          "title" : "Trail",
+          "type" : "object",
+          "x-order" : [
+            "name",
+            "lengthInKilometers",
+            "highlights"
+          ]
+        }
+      },
+      "response" : {
+        "json" : {
+          "highlights" : [
+            "dense pine trees",
+            "rocky terrain",
+            "birdsong"
+          ],
+          "lengthInKilometers" : 5,
+          "name" : "Pine Forest Trail"
+        },
+        "outputTokens" : 39
+      }
+    }
+  ],
+  "machine" : "Mac16,12",
+  "version" : 1
+}

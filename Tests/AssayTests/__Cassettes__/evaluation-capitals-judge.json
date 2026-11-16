@@ -1,0 +1,184 @@
+{
+  "assay" : "0.2.0-dev",
+  "interactions" : [
+    {
+      "key" : "37a2e3301305ed6b82bf05002f11d1ba0d203d88f85e488876d2a6f8788176c2",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_3b.fm_api_generic.draft?variant=generic_sparse_16.1000.81614.13.205144,0",
+          "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
+          "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
+        ],
+        "recordedAt" : "2026-11-16T18:33:35Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "systemVersion" : "Version 27.2 (Build 26B123)"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "instructions" : "You are an expert evaluator. Your task is to evaluate the quality of the AI-generated response to the user's prompt. Rate each dimension independently using the provided scoring guide. Provide brief rationales for your scoring.",
+        "options" : {
+          "includeSchemaInPrompt" : true
+        },
+        "prompt" : "# Prompt\n## Instructions\nnull\n\n## User Prompt\nWhat is the capital of France?\n\n# Response\n\"The capital of France is Paris.\"\n\n# Scoring Guide\n## Conciseness\nWhether the answer is short and to the point.\npass: One short sentence or less.\nfail: Longer than one short sentence.",
+        "schema" : {
+          "additionalProperties" : false,
+          "properties" : {
+            "Conciseness_rationale" : {
+              "description" : "Rationale for Conciseness score",
+              "type" : "string"
+            },
+            "Conciseness_value" : {
+              "description" : "Score for Conciseness",
+              "enum" : [
+                "1",
+                "0"
+              ],
+              "type" : "string"
+            }
+          },
+          "required" : [
+            "Conciseness_value",
+            "Conciseness_rationale"
+          ],
+          "title" : "Rating",
+          "type" : "object",
+          "x-order" : [
+            "Conciseness_value",
+            "Conciseness_rationale"
+          ]
+        }
+      },
+      "response" : {
+        "json" : {
+          "Conciseness_rationale" : "The response is a single short sentence, directly answering the question.",
+          "Conciseness_value" : "1"
+        },
+        "outputTokens" : 37
+      }
+    },
+    {
+      "key" : "63efb8ede98eff2187111bd13e1f09b8eebcdcb4f80630ec778cfb0e87b790bb",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_3b.fm_api_generic.draft?variant=generic_sparse_16.1000.81614.13.205144,0",
+          "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
+          "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
+        ],
+        "recordedAt" : "2026-11-16T18:33:37Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "systemVersion" : "Version 27.2 (Build 26B123)"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "instructions" : "You are an expert evaluator. Your task is to evaluate the quality of the AI-generated response to the user's prompt. Rate each dimension independently using the provided scoring guide. Provide brief rationales for your scoring.",
+        "options" : {
+          "includeSchemaInPrompt" : true
+        },
+        "prompt" : "# Prompt\n## Instructions\nnull\n\n## User Prompt\nWhat is the capital of Japan?\n\n# Response\n\"Tokyo is the capital of Japan.\"\n\n# Scoring Guide\n## Conciseness\nWhether the answer is short and to the point.\npass: One short sentence or less.\nfail: Longer than one short sentence.",
+        "schema" : {
+          "additionalProperties" : false,
+          "properties" : {
+            "Conciseness_rationale" : {
+              "description" : "Rationale for Conciseness score",
+              "type" : "string"
+            },
+            "Conciseness_value" : {
+              "description" : "Score for Conciseness",
+              "enum" : [
+                "1",
+                "0"
+              ],
+              "type" : "string"
+            }
+          },
+          "required" : [
+            "Conciseness_value",
+            "Conciseness_rationale"
+          ],
+          "title" : "Rating",
+          "type" : "object",
+          "x-order" : [
+            "Conciseness_value",
+            "Conciseness_rationale"
+          ]
+        }
+      },
+      "response" : {
+        "json" : {
+          "Conciseness_rationale" : "The response is a single short sentence, directly answering the question.",
+          "Conciseness_value" : "1"
+        },
+        "outputTokens" : 37
+      }
+    },
+    {
+      "key" : "4d8691de684c1943f2a28a3ea479ef393add8877ad6a09512d30c01d50d1d413",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_3b.fm_api_generic.draft?variant=generic_sparse_16.1000.81614.13.205144,0",
+          "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
+          "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
+        ],
+        "recordedAt" : "2026-11-16T18:33:39Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "systemVersion" : "Version 27.2 (Build 26B123)"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "instructions" : "You are an expert evaluator. Your task is to evaluate the quality of the AI-generated response to the user's prompt. Rate each dimension independently using the provided scoring guide. Provide brief rationales for your scoring.",
+        "options" : {
+          "includeSchemaInPrompt" : true
+        },
+        "prompt" : "# Prompt\n## Instructions\nnull\n\n## User Prompt\nWhat is the capital of Peru?\n\n# Response\n\"The capital of Peru is Lima.\"\n\n# Scoring Guide\n## Conciseness\nWhether the answer is short and to the point.\npass: One short sentence or less.\nfail: Longer than one short sentence.",
+        "schema" : {
+          "additionalProperties" : false,
+          "properties" : {
+            "Conciseness_rationale" : {
+              "description" : "Rationale for Conciseness score",
+              "type" : "string"
+            },
+            "Conciseness_value" : {
+              "description" : "Score for Conciseness",
+              "enum" : [
+                "1",
+                "0"
+              ],
+              "type" : "string"
+            }
+          },
+          "required" : [
+            "Conciseness_value",
+            "Conciseness_rationale"
+          ],
+          "title" : "Rating",
+          "type" : "object",
+          "x-order" : [
+            "Conciseness_value",
+            "Conciseness_rationale"
+          ]
+        }
+      },
+      "response" : {
+        "json" : {
+          "Conciseness_rationale" : "The response is a single short sentence, directly answering the question.",
+          "Conciseness_value" : "1"
+        },
+        "outputTokens" : 37
+      }
+    }
+  ],
+  "machine" : "Mac16,12",
+  "version" : 1
+}

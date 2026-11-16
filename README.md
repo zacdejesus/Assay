@@ -11,8 +11,8 @@ someone recorded it.
 Assay records what the model answered, replays it offline, and tells you what changed.
 
 > 🚧 **Status: early.** The M0 spike is done and its findings are below. M1 is in progress:
-> `FakeModel`, `AvailabilityScript` and an [example app](#example-app) exist; cassettes and
-> the drift report don't yet.
+> `FakeModel`, `AvailabilityScript`, an [example app](#example-app) and a first version of
+> [`Cassette`](#cassette) exist; the drift report doesn't yet.
 
 ## The problem
 
@@ -97,6 +97,46 @@ viewModel.availability = script.next
 Design notes:
 [docs/decisions/0004-availability-simulation.md](docs/decisions/0004-availability-simulation.md).
 
+## Cassette
+
+Records what the real model answers into a file next to the test, and replays it from there:
+no model, no Apple Intelligence, the same answer every time, in CI too.
+
+```swift
+@Test func capital() async throws {
+    let cassette = try Cassette("capital")
+    let session = LanguageModelSession(model: cassette.model)
+
+    let response = try await session.respond(to: "What is the capital of France?")
+    #expect(response.content.contains("Paris"))
+}
+```
+
+- **First run:** calls the model and writes `__Cassettes__/capital.json`. Commit it.
+- **Every run after:** reads the file. A request that isn't on the tape fails and shows the
+  closest recording; replay never falls back to the model.
+- **Record again:** `ASSAY_CASSETTE=record swift test`. In CI nothing is ever recorded.
+- **Provenance:** each answer is stored with the model assets and system version that
+  produced it. A tape is a snapshot of one model, and says which.
+
+In `Package.swift`, add `exclude: ["__Cassettes__"]` to the test target. Not stored yet: tools,
+attachments and streaming shape. Design notes:
+[docs/decisions/0005-cassette.md](docs/decisions/0005-cassette.md).
+
+## Apple's Evaluations, in CI
+
+Apple's `Evaluations` framework needs a live model, for the answers and for a model judge.
+Both accept a cassette's model, so an evaluation recorded on a Mac runs in CI from tapes, in
+about a hundredth of a second:
+
+```swift
+let subject = try Cassette("evaluation-capitals")
+let judge = try Cassette("evaluation-capitals-judge")
+let result = try await CapitalsEvaluation(model: subject.model, judge: judge.model).run()
+```
+
+Guide: [docs/guides/evaluations-in-ci.md](docs/guides/evaluations-in-ci.md).
+
 ## Example app
 
 [Examples/TokenSpeed](Examples/TokenSpeed): an iOS and macOS app that shows how many tokens
@@ -110,8 +150,8 @@ Apple Intelligence.
 |---|---|---|
 | M0 | Spike: can I plug into Apple's protocol at all? | ✅ done |
 | M1 | `FakeModel` and availability simulation (v0.1) | ✅ done |
-| M2 | Cassette: record once, replay with provenance (v0.2) | |
-| M3 | Bridge to Apple's `Evaluations`, offline (v0.3) | |
+| M2 | Cassette: record once, replay with provenance (v0.2) | in progress: text and structured output work |
+| M3 | Bridge to Apple's `Evaluations`, offline (v0.3) | in progress: an evaluation with a judge runs from tapes |
 | M4 | Drift report (v0.4) | |
 | M5 | Neutral comparison: on-device, Private Cloud Compute, cloud models (v0.5) | |
 

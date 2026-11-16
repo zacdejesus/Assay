@@ -123,3 +123,34 @@ Found while building the example app (`Examples/TokenSpeed`). One run, 120-token
 - The first request in a process took about 5.5 s to its first snapshot; a second request in
   the same process, about 1 s. A speed measurement has to keep that wait separate from the
   generation speed, which was around 35 to 38 tokens per second on this Mac.
+
+## Experiment D: recording from inside an executor (2026-11-16, macOS 27.2)
+
+The question M0 left open: recording needs the session level (public), replay needs the
+executor level, so how does one model do both? Answer: the executor runs the request again in
+a session of its own over the real model.
+
+- A nested `LanguageModelSession` inside `respond(to:model:streamingInto:)` works.
+- With greedy sampling the nested answer was identical to asking the model directly: plain
+  text, instructions plus two turns, and structured output (compared as canonical JSON).
+- The nested session is built with `LanguageModelSession(model:transcript:)` from every entry
+  but the last prompt. `request.generationOptions` equals the last prompt's own `options`.
+- For a `@Generable` request, `request.contextOptions.includeSchemaInPrompt` arrives as `true`.
+- `Transcript` is `Codable` and round-trips, but each entry carries a generated ID.
+- An encoded `GenerationSchema` doesn't keep a stable key order. Third case of the same thing,
+  after `assetIDs` and `jsonString`: anything compared or hashed has to be made canonical first.
+
+Details and the design that came out of it: [decisions/0005-cassette.md](../decisions/0005-cassette.md).
+
+## Evaluations from the command line (2026-11-16, macOS 27.2, Xcode 27.1)
+
+- `Evaluations.framework` ships next to `Testing.framework` (in the platform's
+  `Developer/Library/Frameworks`), for macOS and for the iOS simulator. A SwiftPM test target
+  imports it without extra settings, and `Evaluation.run()` works under `swift test`.
+- An `Evaluation` produces its subject in its own `subject(from:)`, and `ModelJudgeEvaluator`
+  takes `judge: any LanguageModel`. So a cassette's model fits both without an adapter.
+- The judge asks for structured output: a schema titled `Rating` with `<dimension>_value` (an
+  enum of the scale's values as strings) and `<dimension>_rationale`.
+- The judge's prompt is built from several parts and contains the answer being scored. A
+  changed answer is therefore a different judge request.
+- The `.evaluates(...)` test trait was not tried.

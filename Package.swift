@@ -12,6 +12,7 @@ let package = Package(
     ],
     targets: [
         .target(name: "Assay"),
-        .testTarget(name: "AssayTests", dependencies: ["Assay"]),
+        // Tapes are read from disk next to the test files, not bundled as resources.
+        .testTarget(name: "AssayTests", dependencies: ["Assay"], exclude: ["__Cassettes__"]),
     ]
 )
