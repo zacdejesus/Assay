@@ -20,10 +20,12 @@ All notable changes to Assay are documented here. The format is loosely based on
 - CI: unit tests on GitHub Actions, on a runner without Apple Intelligence.
 - `AvailabilityScript`: a scripted sequence of `SystemLanguageModel.Availability` values for
   testing fallback screens and transitions, without importing Assay in app code (decision 0004).
+- Example app `Examples/TokenSpeed`: tokens per second of the on-device model, with a fallback
+  screen tested through `AvailabilityScript` and measuring tested through `FakeModel`.
 
 ### Changed
 - README rewritten to match roadmap v2.
 - Experiment A: an empty response throws `LanguageModelError.unsupportedTranscriptContent`
   since macOS 27.2 (was `GeneratedContent.ParsingError`).
 
-_M1 is in progress: the example app is still to come._
+_M1 is complete. Next: M2, cassettes._

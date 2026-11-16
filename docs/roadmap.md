@@ -137,7 +137,8 @@ the fake first builds the replay engine.
 - [x] **Availability simulation** (every unavailable reason + transitions such as
       `modelNotReady` → `available`). M0 found it only on `SystemLanguageModel`, so it is a separate
       type, `AvailabilityScript` ([decision 0004](decisions/0004-availability-simulation.md)).
-- [ ] Example app: test that the fallback UI appears when the model is unavailable.
+- [x] Example app: test that the fallback UI appears when the model is unavailable
+      ([Examples/TokenSpeed](../Examples/TokenSpeed)).
 
 **Decide**
 - Structured output (`@Generable`) in v0.1? Suggest: text first, but prove the design can

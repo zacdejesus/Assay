@@ -110,3 +110,16 @@ Found on 2026-11-15, after this Mac went from 27.0.1 (26A434) to 27.2 (26B123):
   `LanguageModelError.unsupportedTranscriptContent` instead of `GeneratedContent.ParsingError`.
   The characterization test in Experiment A caught it. A fake model's "no response left"
   failure (M1) can't rely on either error type staying the same.
+
+## Streaming and usage (2026-11-16, macOS 27.2)
+
+Found while building the example app (`Examples/TokenSpeed`). One run, 120-token limit:
+
+- `ResponseStream.Snapshot.usage` is filled in while the response streams, so tokens per second
+  can be measured live, without waiting for the final `Response`.
+- The on-device model's snapshots arrived about every 10 output tokens (10, 20, 30, …), roughly
+  every 0.25 to 0.3 s. So "time to first token" measured from snapshots is really the time to
+  the first batch.
+- The first request in a process took about 5.5 s to its first snapshot; a second request in
+  the same process, about 1 s. A speed measurement has to keep that wait separate from the
+  generation speed, which was around 35 to 38 tokens per second on this Mac.

@@ -11,8 +11,8 @@ someone recorded it.
 Assay records what the model answered, replays it offline, and tells you what changed.
 
 > 🚧 **Status: early.** The M0 spike is done and its findings are below. M1 is in progress:
-> `FakeModel` and `AvailabilityScript` exist (see [below](#fakemodel)); cassettes and the
-> drift report don't yet.
+> `FakeModel`, `AvailabilityScript` and an [example app](#example-app) exist; cassettes and
+> the drift report don't yet.
 
 ## The problem
 
@@ -97,12 +97,19 @@ viewModel.availability = script.next
 Design notes:
 [docs/decisions/0004-availability-simulation.md](docs/decisions/0004-availability-simulation.md).
 
+## Example app
+
+[Examples/TokenSpeed](Examples/TokenSpeed): an iOS and macOS app that shows how many tokens
+per second the on-device model generates, with a fallback screen when the model can't be used.
+The app doesn't import Assay; its tests do, and they run in a tenth of a second without
+Apple Intelligence.
+
 ## Roadmap
 
 | Milestone | What | Status |
 |---|---|---|
 | M0 | Spike: can I plug into Apple's protocol at all? | ✅ done |
-| M1 | `FakeModel` and availability simulation (v0.1) | in progress: example app left |
+| M1 | `FakeModel` and availability simulation (v0.1) | ✅ done |
 | M2 | Cassette: record once, replay with provenance (v0.2) | |
 | M3 | Bridge to Apple's `Evaluations`, offline (v0.3) | |
 | M4 | Drift report (v0.4) | |

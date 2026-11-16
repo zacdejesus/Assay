@@ -46,4 +46,5 @@ non-deterministic systems — by building it myself. Understanding beats shippin
 
 ## Status
 M0 (spike) is closed: findings in `docs/notes/foundationmodels.md`, experiments kept as
-characterization tests in `Tests/`. Library code starts in M1.
+characterization tests in `Tests/`. M1 is done: `FakeModel`, `AvailabilityScript` and the
+example app in `Examples/TokenSpeed`. Next is M2 (cassettes).
