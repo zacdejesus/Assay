@@ -1,2 +1,3 @@
 // Assay: record, replay and compare Apple language model output.
-// M1 so far: FakeModel (FakeModel.swift). Cassettes come in M2.
+// M1: FakeModel (FakeModel.swift) and AvailabilityScript (AvailabilityScript.swift).
+// Cassettes come in M2.

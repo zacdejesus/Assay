@@ -79,7 +79,7 @@ let model = FakeModel { request in .text("saw \(request.transcript.count) entrie
 - Exact control of stream snapshots (the framework coalesces chunks).
 - Convenience constructors for `LanguageModelError` cases; `.failure(_:)` takes any error.
 - Availability simulation: it isn't on the `LanguageModel` protocol, so it's a separate type
-  and a separate decision.
+  and a separate decision ([0004](0004-availability-simulation.md)).
 
 ## Consequences
 
