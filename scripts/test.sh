@@ -2,10 +2,12 @@
 # How to run Assay's tests.
 #
 #   scripts/test.sh                 unit tests only: fast, no model needed
+#   scripts/test.sh example         the example app's tests (Examples/TokenSpeed): fast, no model needed
 #   scripts/test.sh live            everything, including the tests that call the real model
 #   scripts/test.sh greedy          Experiment C: is greedy (and seeded) sampling repeatable?
 #   scripts/test.sh canary          has the on-device model changed since the last check?
 #   scripts/test.sh record          record what the current model answers into Baselines/
+#   scripts/test.sh rerecord        record the committed tapes again (Tests/AssayTests/__Cassettes__)
 #   scripts/test.sh compare         compare the two most recent baselines
 #
 #   scripts/test.sh before-update   run BEFORE installing an OS update
@@ -20,6 +22,9 @@ case "${1:-unit}" in
   unit)
     swift test
     ;;
+  example)
+    swift test --package-path Examples/TokenSpeed/TokenSpeedCore
+    ;;
   live)
     ASSAY_LIVE=1 swift test
     ;;
@@ -31,6 +36,9 @@ case "${1:-unit}" in
     ;;
   record)
     ASSAY_RECORD=1 swift test --filter recordBaseline
+    ;;
+  rerecord)
+    ASSAY_CASSETTE=record swift test --filter 'RecordedTape|EvaluationsBridge'
     ;;
   compare)
     ASSAY_COMPARE=1 swift test --filter compareLatestBaselines
@@ -48,6 +56,8 @@ case "${1:-unit}" in
     "$0" canary || true
     echo "== 2/4 full suite, live (failures here are behavior changes in the framework)"
     "$0" live || true
+    echo "   (RecordedTape and EvaluationsBridge tests replay a committed tape, so they pass even if the model changed;"
+    echo "    use: scripts/test.sh rerecord, then git diff, to see what the new model answers)"
     echo "== 3/4 new baseline"
     "$0" record
     echo "== 4/4 comparison with the previous baseline"
@@ -57,7 +67,7 @@ case "${1:-unit}" in
     echo "failed, and add the new versions to docs/notes/environment.md."
     ;;
   *)
-    sed -n '2,15p' "$0"
+    sed -n '2,17p' "$0"
     exit 2
     ;;
 esac

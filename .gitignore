@@ -6,6 +6,8 @@
 .swiftpm/
 Packages/
 *.xcodeproj
+# ...except the example app's project, which is written by hand and committed.
+!Examples/**/*.xcodeproj
 
 # Xcode
 xcuserdata/

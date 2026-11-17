@@ -1,0 +1,94 @@
+{
+  "assay" : "0.2.0-dev",
+  "interactions" : [
+    {
+      "key" : "42d6e47fab3ff5d8adb1634b642719459bfb08c8a08b91ae23ddf7ce323b2988",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_3b.fm_api_generic.draft?variant=generic_sparse_16.1000.81614.13.205144,0",
+          "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
+          "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
+        ],
+        "recordedAt" : "2026-11-16T18:33:34Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "systemVersion" : "Version 27.2 (Build 26B123)"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "instructions" : "Answer in one short sentence.",
+        "options" : {
+          "maximumResponseTokens" : 60
+        },
+        "prompt" : "What is the capital of France?"
+      },
+      "response" : {
+        "outputTokens" : 15,
+        "text" : "The capital of France is Paris."
+      }
+    },
+    {
+      "key" : "ec5491ef482cdebbba6940d250833e796415b7ce0888d2246887c359c62cf553",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_3b.fm_api_generic.draft?variant=generic_sparse_16.1000.81614.13.205144,0",
+          "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
+          "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
+        ],
+        "recordedAt" : "2026-11-16T18:33:36Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "systemVersion" : "Version 27.2 (Build 26B123)"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "instructions" : "Answer in one short sentence.",
+        "options" : {
+          "maximumResponseTokens" : 60
+        },
+        "prompt" : "What is the capital of Japan?"
+      },
+      "response" : {
+        "outputTokens" : 15,
+        "text" : "Tokyo is the capital of Japan."
+      }
+    },
+    {
+      "key" : "40a8a50669ab60aa99aba9ac9022025a07a9a2555c7d031dac9a317b03136589",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_3b.fm_api_generic.draft?variant=generic_sparse_16.1000.81614.13.205144,0",
+          "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
+          "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
+        ],
+        "recordedAt" : "2026-11-16T18:33:38Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "systemVersion" : "Version 27.2 (Build 26B123)"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "instructions" : "Answer in one short sentence.",
+        "options" : {
+          "maximumResponseTokens" : 60
+        },
+        "prompt" : "What is the capital of Peru?"
+      },
+      "response" : {
+        "outputTokens" : 15,
+        "text" : "The capital of Peru is Lima."
+      }
+    }
+  ],
+  "machine" : "Mac16,12",
+  "version" : 1
+}

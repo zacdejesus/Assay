@@ -20,10 +20,18 @@ All notable changes to Assay are documented here. The format is loosely based on
 - CI: unit tests on GitHub Actions, on a runner without Apple Intelligence.
 - `AvailabilityScript`: a scripted sequence of `SystemLanguageModel.Availability` values for
   testing fallback screens and transitions, without importing Assay in app code (decision 0004).
+- Example app `Examples/TokenSpeed`: tokens per second of the on-device model, with a fallback
+  screen tested through `AvailabilityScript` and measuring tested through `FakeModel`.
+- `Cassette`: records a model's answers to `__Cassettes__/<name>.json` and replays them
+  without the model. Matches by request, fails loudly on a mismatch, never records in CI,
+  stores provenance (decision 0005). Tape format v1: text and structured output.
+- A tape recorded from the on-device model, replayed in CI (`RecordedTapeTests`).
+- Apple's `Evaluations` from tapes: an evaluation with a model judge runs under `swift test`
+  with no live model, and a tampered tape makes it fail. Guide in `docs/guides/`.
 
 ### Changed
 - README rewritten to match roadmap v2.
 - Experiment A: an empty response throws `LanguageModelError.unsupportedTranscriptContent`
   since macOS 27.2 (was `GeneratedContent.ParsingError`).
 
-_M1 is in progress: the example app is still to come._
+_M1 is complete. M2 (cassettes) and M3 (Evaluations) are in progress._

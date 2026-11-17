@@ -31,3 +31,12 @@ jobs:
 
       - name: Unit tests
         run: scripts/test.sh
+
+      - name: Example app tests
+        run: scripts/test.sh example
+
+      # The app target itself: proves the hand-written Xcode project still builds.
+      - name: Build the example app
+        run: >
+          xcodebuild -project Examples/TokenSpeed/TokenSpeed.xcodeproj -scheme TokenSpeed
+          -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build

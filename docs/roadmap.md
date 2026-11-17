@@ -137,7 +137,8 @@ the fake first builds the replay engine.
 - [x] **Availability simulation** (every unavailable reason + transitions such as
       `modelNotReady` → `available`). M0 found it only on `SystemLanguageModel`, so it is a separate
       type, `AvailabilityScript` ([decision 0004](decisions/0004-availability-simulation.md)).
-- [ ] Example app: test that the fallback UI appears when the model is unavailable.
+- [x] Example app: test that the fallback UI appears when the model is unavailable
+      ([Examples/TokenSpeed](../Examples/TokenSpeed)).
 
 **Decide**
 - Structured output (`@Generable`) in v0.1? Suggest: text first, but prove the design can
@@ -169,18 +170,18 @@ what makes M4 possible.
 - Prior art to study: **mattt/Replay** (modes, matchers, redaction, trait API), VCR/vcrpy.
 
 **Build**
-- [ ] Tape format v1 (JSON): `version`, interactions (request key → response), and
+- [x] Tape format v1 (JSON): `version`, interactions (request key → response), and
       **provenance**: OS version + build, model identifier (if exposed), device class,
       generation options, recorded-at date, Assay version. *Provenance is non-negotiable:
       M4 depends on it.*
-- [ ] Modes: `.replay` (never live; missing tape = failure), `.record` (always live),
+- [x] Modes: `.replay` (never live; missing tape = failure), `.record` (always live),
       `.auto` (replay if present, else record). **In CI: never record, ever.**
-- [ ] Request matching: prompt + instructions + options + schema, with a hook for custom
+- [x] Request matching: prompt + instructions + options + schema, with a hook for custom
       normalisation (timestamps, IDs).
-- [ ] Mismatch = loud failure showing the closest recorded request.
-- [ ] Redaction hook (unused until cloud models, but designed now).
-- [ ] Tapes in `__Cassettes__/` next to the test (already un-ignored in `.gitignore`).
-- [ ] Documented "re-record" workflow.
+- [x] Mismatch = loud failure showing the closest recorded request.
+- [x] Redaction hook (unused until cloud models, but designed now).
+- [x] Tapes in `__Cassettes__/` next to the test (already un-ignored in `.gitignore`).
+- [x] Documented "re-record" workflow.
 
 **Decide**
 - One file per test or per interaction? Match by key or replay in order?
@@ -216,15 +217,15 @@ useful instead of competing with it.
 - Composition with someone else's framework: adapters, not wrappers of everything.
 
 **Build**
-- [ ] A cassette-backed model used as the subject of an Apple `Evaluation`.
-- [ ] **Judge calls recorded too**, so judged evals replay offline.
+- [x] A cassette-backed model used as the subject of an Apple `Evaluation`.
+- [x] **Judge calls recorded too**, so judged evals replay offline.
 - [ ] Example: the example app's evaluation running in `swift test` / `xcodebuild test`
       with no live model.
-- [ ] A guide: "run Apple Evaluations in GitHub Actions with Assay".
+- [x] A guide: "run Apple Evaluations in GitHub Actions with Assay".
 
 **Decide**
-- Does Evaluations run from the command line at all? (Unverified. If it's Xcode-only,
-  this milestone shrinks or changes shape. Check in M0.)
+- Does Evaluations run from the command line at all? **Yes** (2026-11-16): `import
+  Evaluations` and `Evaluation.run()` work under `swift test`.
 - Replayed evals are deterministic: fine for regression gating, meaningless for
   measuring variance. Say so in the docs.
 
