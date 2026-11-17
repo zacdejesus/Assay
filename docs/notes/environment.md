@@ -69,10 +69,13 @@ you choose.
 **After installing it**
 
 ```sh
-scripts/test.sh after-update    # canary, full live suite, new baseline, comparison
+scripts/test.sh after-update    # canary, full live suite, drift report, new baseline, comparison
 ```
 
 Then:
+- Read `drift-report.md`: what the new model answers to the requests in the committed tapes.
+  To keep the new answers as the tapes, run `scripts/test.sh drift-update`; the old tapes move
+  to `__Cassettes__/generations/`. The tests that pin recorded answers then need updating.
 - If the canary failed, the model changed: put the new IDs in `knownAssetIDs`
   (`Tests/AssayTests/ModelCanaryTests.swift`).
 - If a characterization test failed, the framework's behavior changed: update the test and
@@ -89,3 +92,7 @@ Then:
 | `scripts/test.sh canary` | Has the model changed since the last check? | Yes |
 | `scripts/test.sh record` | Writes a baseline for the current model | Yes |
 | `scripts/test.sh compare` | Compares the two most recent baselines | No |
+| `scripts/test.sh example` | The example app's tests | No |
+| `scripts/test.sh rerecord` | Records the committed tapes again, from the tests | Yes |
+| `scripts/test.sh drift` | Asks the model the tapes' requests again; writes `drift-report.md` | Yes |
+| `scripts/test.sh drift-update` | The same, and keeps the new answers as the tapes | Yes |

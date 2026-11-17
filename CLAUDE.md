@@ -49,4 +49,5 @@ M0 (spike) is closed: findings in `docs/notes/foundationmodels.md`, experiments 
 characterization tests in `Tests/`. M1 is done: `FakeModel`, `AvailabilityScript` and the
 example app in `Examples/TokenSpeed`. M2 and M3 are in progress:
 `Cassette` records and replays text and structured output (decision 0005), and Apple's
-`Evaluations` runs from tapes (`docs/guides/evaluations-in-ci.md`).
+`Evaluations` runs from tapes (`docs/guides/evaluations-in-ci.md`). M4 has a first drift
+report (decision 0006, proposed), not yet run across a real model change.

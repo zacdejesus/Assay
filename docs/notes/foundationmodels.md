@@ -154,3 +154,17 @@ Details and the design that came out of it: [decisions/0005-cassette.md](../deci
 - The judge's prompt is built from several parts and contains the answer being scored. A
   changed answer is therefore a different judge request.
 - The `.evaluates(...)` test trait was not tried.
+
+## Experiment E: asking a recorded request again (2026-11-16, macOS 27.2)
+
+For the drift report: is what a tape stores enough to repeat the request?
+
+- A prompt built from parts gives the same answer as one string with a line break between
+  the parts (2 prompts). Glued together without breaks, the answer differed for one of them.
+  So the parts of a prompt are joined with line breaks, or something equivalent to the model.
+- `GenerationSchema` decodes back from its canonical JSON and gives the same structured answer.
+- A `Transcript` built by hand from instructions and earlier turns as plain text gives the same
+  next answer as the original session.
+- All 9 requests in the committed tapes, asked again: 9 identical answers.
+
+Details: [decisions/0006-drift.md](../decisions/0006-drift.md).

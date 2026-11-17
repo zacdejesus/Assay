@@ -52,6 +52,9 @@ struct Tape: Codable, Sendable {
         var assetIDs: [String]
         /// The sampling actually used, which is greedy when the request didn't choose one.
         var sampling: Cassette.Request.Sampling
+        /// How long the model took to answer, in seconds. Noisy: the first request in a
+        /// process is several times slower than the next.
+        var seconds: Double?
     }
 
     // MARK: Reading and writing
@@ -91,6 +94,47 @@ struct Tape: Codable, Sendable {
             withIntermediateDirectories: true
         )
         try data.write(to: url, options: .atomic)
+    }
+
+    // MARK: Generations
+
+    /// The models that produced this tape's answers. Normally one.
+    var models: Set<[String]> {
+        Set(interactions.map(\.provenance.assetIDs))
+    }
+
+    /// A short name for the model that produced the tape, usable in a file name:
+    /// "27.2-26B123-1a2b3c4d" (system version, build, digest of the asset IDs).
+    var generationLabel: String {
+        guard let provenance = interactions.first?.provenance else { return "empty" }
+        var label = "unknown"
+        if let version = provenance.systemVersion,
+           let match = version.firstMatch(of: /Version ([0-9.]+) \(Build ([0-9A-Za-z]+)\)/) {
+            label = "\(match.1)-\(match.2)"
+        }
+        let digest = SHA256.hash(data: Data(provenance.assetIDs.joined(separator: "\n").utf8))
+        return label + "-" + digest.prefix(4).map { String(format: "%02x", $0) }.joined()
+    }
+
+    /// Where an older generation of the tape at `url` is kept:
+    /// `__Cassettes__/generations/<name>/<label>.json`.
+    func archiveURL(besides url: URL) -> URL {
+        url.deletingLastPathComponent()
+            .appendingPathComponent("generations")
+            .appendingPathComponent(url.deletingPathExtension().lastPathComponent)
+            .appendingPathComponent("\(generationLabel).json")
+    }
+
+    /// Keeps this tape as an older generation if it was recorded from a different model
+    /// than `assetIDs`. Recording again from the same model just replaces the tape.
+    /// Returns where it was written, if it was.
+    @discardableResult
+    func archive(besides url: URL, ifModelDiffersFrom assetIDs: [String]) throws -> URL? {
+        guard !interactions.isEmpty, models != [assetIDs] else { return nil }
+        let destination = archiveURL(besides: url)
+        guard !FileManager.default.fileExists(atPath: destination.path) else { return destination }
+        try write(to: destination)
+        return destination
     }
 
     static var currentMachine: String? {

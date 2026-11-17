@@ -9,10 +9,11 @@
           "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
           "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
         ],
-        "recordedAt" : "2026-11-16T18:33:35Z",
+        "recordedAt" : "2026-11-16T18:44:16Z",
         "sampling" : {
           "mode" : "greedy"
         },
+        "seconds" : 0.327,
         "systemVersion" : "Version 27.2 (Build 26B123)"
       },
       "request" : {
@@ -38,10 +39,11 @@
           "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
           "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
         ],
-        "recordedAt" : "2026-11-16T18:33:36Z",
+        "recordedAt" : "2026-11-16T18:44:17Z",
         "sampling" : {
           "mode" : "greedy"
         },
+        "seconds" : 0.326,
         "systemVersion" : "Version 27.2 (Build 26B123)"
       },
       "request" : {

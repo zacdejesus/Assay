@@ -28,10 +28,13 @@ All notable changes to Assay are documented here. The format is loosely based on
 - A tape recorded from the on-device model, replayed in CI (`RecordedTapeTests`).
 - Apple's `Evaluations` from tapes: an evaluation with a model judge runs under `swift test`
   with no live model, and a tampered tape makes it fail. Guide in `docs/guides/`.
+- Drift report: `Drift.check` asks the current model a tape's requests again and classifies
+  each case; `Drift.compare` compares two tapes; the `assay` command prints a Markdown report.
+  Tapes replaced by a different model's answers are kept under `generations/` (decision 0006).
 
 ### Changed
 - README rewritten to match roadmap v2.
 - Experiment A: an empty response throws `LanguageModelError.unsupportedTranscriptContent`
   since macOS 27.2 (was `GeneratedContent.ParsingError`).
 
-_M1 is complete. M2 (cassettes) and M3 (Evaluations) are in progress._
+_M1 is complete. M2 (cassettes), M3 (Evaluations) and M4 (drift) are in progress._

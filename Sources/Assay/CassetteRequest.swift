@@ -49,6 +49,16 @@ extension Cassette {
                 self.seed = seed
             }
 
+            /// Back to the framework's type, to ask a model again with the same sampling.
+            func samplingMode() throws -> GenerationOptions.SamplingMode {
+                switch (mode, top, probabilityThreshold) {
+                case ("greedy", _, _): return .greedy
+                case ("top", let top?, _): return .random(top: top, seed: seed)
+                case ("probabilityThreshold", _, let threshold?): return .random(probabilityThreshold: threshold, seed: seed)
+                default: throw CassetteError.unsupported("the sampling mode \"\(mode)\"")
+                }
+            }
+
             init(_ sampling: GenerationOptions.SamplingMode) {
                 switch sampling.kind {
                 case .greedy:

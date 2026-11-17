@@ -8,6 +8,8 @@
 #   scripts/test.sh canary          has the on-device model changed since the last check?
 #   scripts/test.sh record          record what the current model answers into Baselines/
 #   scripts/test.sh rerecord        record the committed tapes again (Tests/AssayTests/__Cassettes__)
+#   scripts/test.sh drift           ask the current model the tapes' requests again; report what changed
+#   scripts/test.sh drift-update    the same, and keep the new answers (old tapes go to generations/)
 #   scripts/test.sh compare         compare the two most recent baselines
 #
 #   scripts/test.sh before-update   run BEFORE installing an OS update
@@ -40,6 +42,12 @@ case "${1:-unit}" in
   rerecord)
     ASSAY_CASSETTE=record swift test --filter 'RecordedTape|EvaluationsBridge'
     ;;
+  drift)
+    swift run -q assay drift Tests/AssayTests/__Cassettes__ --report drift-report.md
+    ;;
+  drift-update)
+    swift run -q assay drift Tests/AssayTests/__Cassettes__ --update --report drift-report.md
+    ;;
   compare)
     ASSAY_COMPARE=1 swift test --filter compareLatestBaselines
     ;;
@@ -52,22 +60,24 @@ case "${1:-unit}" in
     ;;
   after-update)
     sw_vers
-    echo "== 1/4 canary (a failure here means the model changed: expected after an update)"
+    echo "== 1/5 canary (a failure here means the model changed: expected after an update)"
     "$0" canary || true
-    echo "== 2/4 full suite, live (failures here are behavior changes in the framework)"
+    echo "== 2/5 full suite, live (failures here are behavior changes in the framework)"
     "$0" live || true
-    echo "   (RecordedTape and EvaluationsBridge tests replay a committed tape, so they pass even if the model changed;"
-    echo "    use: scripts/test.sh rerecord, then git diff, to see what the new model answers)"
-    echo "== 3/4 new baseline"
+    echo "== 3/5 drift report: the tapes' requests, asked again (saved to drift-report.md)"
+    "$0" drift || true
+    echo "== 4/5 new baseline"
     "$0" record
-    echo "== 4/4 comparison with the previous baseline"
+    echo "== 5/5 comparison with the previous baseline"
     "$0" compare
     echo
+    echo "Read drift-report.md. To keep the new model's answers as the tapes (the old ones"
+    echo "move to generations/): scripts/test.sh drift-update"
     echo "Next: update knownAssetIDs in Tests/AssayTests/ModelCanaryTests.swift if the canary"
     echo "failed, and add the new versions to docs/notes/environment.md."
     ;;
   *)
-    sed -n '2,17p' "$0"
+    sed -n '2,19p' "$0"
     exit 2
     ;;
 esac
