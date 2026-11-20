@@ -253,16 +253,16 @@ a tool whose job is exposing its own model's regressions. That's the moat.
 - Prior art: **xceval**'s baseline/candidate compare (regressed / fixed / modified).
 
 **Build**
-- [ ] **Tape generations:** tapes grouped by provenance (e.g. `iOS 27.0 (24A…)` vs
+- [x] **Tape generations:** tapes grouped by provenance (e.g. `iOS 27.0 (24A…)` vs
       `iOS 27.1`), so old recordings are *kept* when re-recording, not overwritten.
-- [ ] `assay drift` command: re-run a suite live on the current model, compare against
+- [x] `assay drift` command: re-run a suite live on the current model, compare against
       the previous generation.
-- [ ] Per-case classification: **unchanged / changed-but-passing / flipped-to-fail /
+- [x] Per-case classification: **unchanged / changed-but-passing / flipped-to-fail /
       flipped-to-pass**, using Apple `Evaluations` metrics (M3) or `#expect`-style checks
       as the pass criterion.
-- [ ] Latency and token-usage deltas (`response.usage`).
-- [ ] Markdown report with diffs of flipped cases.
-- [ ] CI gate: fail if flipped-to-fail > threshold.
+- [x] Latency and token-usage deltas (`response.usage`).
+- [x] Markdown report with diffs of flipped cases.
+- [x] CI gate: fail if flipped-to-fail > threshold.
 
 **Decide**
 - One sample per case, or k samples to separate model change from sampling noise?

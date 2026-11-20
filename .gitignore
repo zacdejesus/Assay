@@ -17,5 +17,8 @@ DerivedData/
 # NOTE: __Cassettes__/ is intentionally NOT ignored.
 # Recorded tapes are committed fixtures — that's what lets CI replay them.
 
+# Output of scripts/test.sh drift.
+drift-report.md
+
 # Personal to-do list: stays local.
 docs/pending.md

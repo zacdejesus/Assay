@@ -9,9 +9,11 @@ let package = Package(
     ],
     products: [
         .library(name: "Assay", targets: ["Assay"]),
+        .executable(name: "assay", targets: ["AssayCLI"]),
     ],
     targets: [
         .target(name: "Assay"),
+        .executableTarget(name: "AssayCLI", dependencies: ["Assay"]),
         // Tapes are read from disk next to the test files, not bundled as resources.
         .testTarget(name: "AssayTests", dependencies: ["Assay"], exclude: ["__Cassettes__"]),
     ]

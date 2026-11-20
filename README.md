@@ -137,6 +137,34 @@ let result = try await CapitalsEvaluation(model: subject.model, judge: judge.mod
 
 Guide: [docs/guides/evaluations-in-ci.md](docs/guides/evaluations-in-ci.md).
 
+## Drift report
+
+After an OS update, ask the new model everything the tapes hold and see what changed:
+
+```sh
+swift run assay drift Tests/MyTests/__Cassettes__ --report drift.md
+```
+
+```
+**41 cases: 37 unchanged, 1 changed, 3 flipped to fail.**
+```
+
+With a pass criterion, from a test:
+
+```swift
+let report = try await Drift.check(tape: cassette.url) { request, answer in
+    answer.contains("Paris")
+}
+#expect(report.count(.flippedToFail) == 0, "\(report.markdown())")
+```
+
+The report shows the before and after of every case that isn't unchanged, and says whether
+the model assets actually differ. `--update` keeps the new answers and moves the old tape to
+`generations/`. Design notes: [docs/decisions/0006-drift.md](docs/decisions/0006-drift.md).
+
+So far it has only been run against the same model that recorded the tapes (9 of 9
+unchanged). It hasn't seen a real model change yet.
+
 ## Example app
 
 [Examples/TokenSpeed](Examples/TokenSpeed): an iOS and macOS app that shows how many tokens
@@ -152,7 +180,7 @@ Apple Intelligence.
 | M1 | `FakeModel` and availability simulation (v0.1) | ✅ done |
 | M2 | Cassette: record once, replay with provenance (v0.2) | in progress: text and structured output work |
 | M3 | Bridge to Apple's `Evaluations`, offline (v0.3) | in progress: an evaluation with a judge runs from tapes |
-| M4 | Drift report (v0.4) | |
+| M4 | Drift report (v0.4) | in progress: works, not yet run across a real model change |
 | M5 | Neutral comparison: on-device, Private Cloud Compute, cloud models (v0.5) | |
 
 Details, risks and "done when" for each: [docs/roadmap.md](docs/roadmap.md).

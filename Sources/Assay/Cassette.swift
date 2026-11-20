@@ -134,10 +134,7 @@ public final class Cassette: Sendable {
             if let system = base as? SystemLanguageModel, case .unavailable(let reason) = system.availability {
                 throw CassetteError.modelUnavailable(tape: name, reason: String(describing: reason))
             }
-            let recorder = Recorder(
-                capabilities: base.capabilities,
-                makeSession: { transcript in LanguageModelSession(model: base, transcript: transcript) }
-            )
+            let recorder = Recorder(base)
             state = try State(name: name, url: url, tape: Tape(machine: Tape.currentMachine), recorder: recorder, normalize: normalize, redact: redact)
         } else {
             guard exists else { throw CassetteError.missingTape(tape: name, path: url.path) }
@@ -204,6 +201,133 @@ public final class Cassette: Sendable {
     struct Recorder: Sendable {
         var capabilities: LanguageModelCapabilities
         var makeSession: @Sendable (Transcript) -> LanguageModelSession
+
+        init(capabilities: LanguageModelCapabilities, makeSession: @escaping @Sendable (Transcript) -> LanguageModelSession) {
+            self.capabilities = capabilities
+            self.makeSession = makeSession
+        }
+
+        init(_ base: some LanguageModel) {
+            self.init(
+                capabilities: base.capabilities,
+                makeSession: { transcript in LanguageModelSession(model: base, transcript: transcript) }
+            )
+        }
+
+        /// Asks the model, and returns the answer in the form a tape stores.
+        ///
+        /// Recording happens at the session level: a session's response and transcript are
+        /// public API, the executor's events are not. So the request runs in a session of
+        /// its own, built from everything but the last prompt.
+        nonisolated(nonsending) func perform(
+            _ call: LiveCall,
+            redact: (@Sendable (String) -> String)?
+        ) async throws -> (Tape.Response, Tape.Provenance) {
+            let session = makeSession(call.prior)
+
+            // Greedy unless the test chose a sampling mode: a tape should hold what the
+            // model says, not one draw of the dice.
+            var options = call.options
+            if options.samplingMode == nil {
+                options.samplingMode = .greedy
+            }
+
+            let clock = ContinuousClock()
+            let start = clock.now
+            let response: Tape.Response
+            let entries: [Transcript.Entry]
+            if let schema = call.schema {
+                let result = try await session.respond(
+                    to: call.prompt, schema: schema, options: options, contextOptions: call.contextOptions
+                )
+                var json = try JSONValue(json: result.rawContent.jsonString)
+                if let redact {
+                    json = try JSONValue(json: redact(try json.canonicalString()))
+                }
+                response = Tape.Response(json: json, outputTokens: result.usage.output.totalTokenCount)
+                entries = Array(result.transcriptEntries)
+            } else {
+                let result = try await session.respond(
+                    to: call.prompt, options: options, contextOptions: call.contextOptions
+                )
+                response = Tape.Response(
+                    text: redact?(result.content) ?? result.content,
+                    outputTokens: result.usage.output.totalTokenCount
+                )
+                entries = Array(result.transcriptEntries)
+            }
+            let elapsed = clock.now - start
+
+            var assetIDs: Set<String> = []
+            var systemVersion: String?
+            for case .response(let entry) in entries {
+                assetIDs.formUnion(entry.assetIDs)
+                if let value = entry.metadata["systemVersion"] {
+                    systemVersion = (try? value.value(String.self)) ?? value.jsonString
+                }
+            }
+            let seconds = Double(elapsed.components.seconds) + Double(elapsed.components.attoseconds) / 1e18
+            let provenance = Tape.Provenance(
+                recordedAt: Date(timeIntervalSince1970: Date().timeIntervalSince1970.rounded()),
+                systemVersion: systemVersion,
+                assetIDs: assetIDs.sorted(),
+                sampling: options.samplingMode.map(Request.Sampling.init) ?? .greedy,
+                seconds: (seconds * 1000).rounded() / 1000
+            )
+            return (response, provenance)
+        }
+    }
+
+    /// Everything needed to ask a model one question, whether it comes from a session's
+    /// request (recording) or from a request stored in a tape (the drift check).
+    struct LiveCall {
+        var prior: Transcript
+        var prompt: Prompt
+        var schema: GenerationSchema?
+        var options: GenerationOptions
+        var contextOptions: ContextOptions
+
+        /// From what a session sent to the executor.
+        init(_ request: LanguageModelExecutorGenerationRequest) throws {
+            guard case .prompt(let last) = request.transcript.last else {
+                throw CassetteError.unsupported("a request that doesn't end with a prompt")
+            }
+            prior = Transcript(entries: request.transcript.dropLast())
+            // Rebuilt part by part, so the model receives the same segments the test sent.
+            prompt = Prompt(try Request.parts(of: last.segments))
+            schema = request.schema
+            options = request.generationOptions
+            contextOptions = request.contextOptions
+        }
+
+        /// From a request stored in a tape. Experiment E: the stored form is enough to get
+        /// the same answer again from the same model.
+        init(_ request: Request) throws {
+            var entries: [Transcript.Entry] = []
+            func text(_ content: String) -> [Transcript.Segment] {
+                [.text(Transcript.TextSegment(content: content))]
+            }
+            if let instructions = request.instructions {
+                entries.append(.instructions(Transcript.Instructions(segments: text(instructions), toolDefinitions: [])))
+            }
+            for turn in request.history {
+                switch turn.role {
+                case .prompt:
+                    entries.append(.prompt(Transcript.Prompt(segments: text(turn.text))))
+                case .response:
+                    entries.append(.response(Transcript.Response(assetIDs: [], segments: text(turn.text))))
+                }
+            }
+            prior = Transcript(entries: entries)
+            prompt = Prompt(request.prompt)
+            schema = try request.schema.map { try JSONDecoder().decode(GenerationSchema.self, from: Data($0.utf8)) }
+            options = GenerationOptions(
+                samplingMode: try request.options.sampling.map { try $0.samplingMode() },
+                temperature: request.options.temperature,
+                maximumResponseTokens: request.options.maximumResponseTokens
+            )
+            contextOptions = ContextOptions(includeSchemaInPrompt: request.options.includeSchemaInPrompt)
+        }
     }
 
     // MARK: - State
@@ -223,6 +347,8 @@ public final class Cassette: Sendable {
         let recorder: Recorder?
         let normalize: (@Sendable (inout Request) -> Void)?
         let redact: (@Sendable (String) -> String)?
+        /// The tape that was on disk when recording started, if there was a readable one.
+        let replaced: Tape?
         private let storage: Mutex<Storage>
 
         /// Tapes being recorded in this process. Two cassettes writing one file would
@@ -247,6 +373,7 @@ public final class Cassette: Sendable {
             self.recorder = recorder
             self.normalize = normalize
             self.redact = redact
+            self.replaced = recorder != nil ? try? Tape.read(from: url) : nil
             self.storage = Mutex(Storage(tape: tape))
         }
 
@@ -287,71 +414,21 @@ public final class Cassette: Sendable {
             original: LanguageModelExecutorGenerationRequest,
             with recorder: Recorder
         ) async throws -> Tape.Response {
-            // Recording happens at the session level: a session's response and transcript
-            // are public API, the executor's events are not. So the request is run again
-            // in a session of its own, built from everything but the last prompt.
-            let session = recorder.makeSession(Transcript(entries: original.transcript.dropLast()))
-
-            // Greedy unless the test chose a sampling mode: a tape should hold what the
-            // model says, not one draw of the dice.
-            // The prompt is rebuilt part by part, so the model receives the same segments
-            // the test sent, not one joined string.
-            guard case .prompt(let last) = original.transcript.last else {
-                throw CassetteError.unsupported("a request that doesn't end with a prompt")
-            }
-            let prompt = Prompt(try Request.parts(of: last.segments))
-
-            var options = original.generationOptions
-            if options.samplingMode == nil {
-                options.samplingMode = .greedy
-            }
-
-            var response: Tape.Response
-            let entries: [Transcript.Entry]
-            if let schema = original.schema {
-                let result = try await session.respond(
-                    to: prompt, schema: schema, options: options, contextOptions: original.contextOptions
-                )
-                var json = try JSONValue(json: result.rawContent.jsonString)
-                if let redact {
-                    json = try JSONValue(json: redact(try json.canonicalString()))
-                }
-                response = Tape.Response(json: json, outputTokens: result.usage.output.totalTokenCount)
-                entries = Array(result.transcriptEntries)
-            } else {
-                let result = try await session.respond(
-                    to: prompt, options: options, contextOptions: original.contextOptions
-                )
-                response = Tape.Response(
-                    text: redact?(result.content) ?? result.content,
-                    outputTokens: result.usage.output.totalTokenCount
-                )
-                entries = Array(result.transcriptEntries)
-            }
-
-            var assetIDs: Set<String> = []
-            var systemVersion: String?
-            for case .response(let entry) in entries {
-                assetIDs.formUnion(entry.assetIDs)
-                if let value = entry.metadata["systemVersion"] {
-                    systemVersion = (try? value.value(String.self)) ?? value.jsonString
-                }
-            }
-
+            let (response, provenance) = try await recorder.perform(try LiveCall(original), redact: redact)
             let interaction = Tape.Interaction(
                 key: try Canonical.key(for: request),
                 request: request,
                 response: response,
-                provenance: Tape.Provenance(
-                    recordedAt: Date(timeIntervalSince1970: Date().timeIntervalSince1970.rounded()),
-                    systemVersion: systemVersion,
-                    assetIDs: assetIDs.sorted(),
-                    sampling: options.samplingMode.map(Request.Sampling.init) ?? .greedy
-                )
+                provenance: provenance
             )
             // The file is rewritten after every interaction, so an interrupted run leaves a
             // valid tape. Written inside the lock: writes can't interleave.
             try storage.withLock { storage in
+                if storage.tape.interactions.isEmpty, let replaced {
+                    // First write over an existing tape: if it came from another model,
+                    // keep it as an older generation instead of losing it.
+                    try replaced.archive(besides: url, ifModelDiffersFrom: provenance.assetIDs)
+                }
                 storage.tape.interactions.append(interaction)
                 try storage.tape.write(to: url)
             }
