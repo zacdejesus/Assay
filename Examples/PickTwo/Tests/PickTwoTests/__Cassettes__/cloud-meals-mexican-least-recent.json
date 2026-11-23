@@ -1,0 +1,133 @@
+{
+  "assay" : "0.2.0-dev",
+  "interactions" : [
+    {
+      "key" : "fd5b4760fb3c88b680db32646f6cd30d6edb7058d164c506fe6e66ab37b61a89",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_server_v2.base_zap.generic_11.3.0",
+          "com.apple.fm.language.instruct_server_v2.fm_api.generic_11.170003.18"
+        ],
+        "recordedAt" : "2026-11-23T18:40:13Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "seconds" : 1.293,
+        "systemVersion" : "6B85"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "instructions" : "You plan a home-cooked dinner.\nFrom the numbered list of AVAILABLE ingredients, choose EXACTLY 2 that belong to the same cuisine (italian: pasta, tomatoes, basil, mozzarella; mexican: tortillas, black beans, avocado, lime; japanese: rice, nori, tofu, miso).\nRefer to each one by its index.\nFor each chosen ingredient, list 3 dishes of that cuisine built around that ingredient.",
+        "options" : {
+          "includeSchemaInPrompt" : true,
+          "maximumResponseTokens" : 512,
+          "sampling" : {
+            "mode" : "greedy"
+          }
+        },
+        "prompt" : "Available ingredients: 0=Tortillas, 1=Avocado\n\nWhich two ingredients should I cook with tonight, with 3 dishes for each?",
+        "schema" : {
+          "$defs" : {
+            "NamedPick" : {
+              "additionalProperties" : false,
+              "properties" : {
+                "details" : {
+                  "description" : "Three suggestions for this item",
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "maxItems" : 3,
+                  "minItems" : 3,
+                  "type" : "array"
+                },
+                "index" : {
+                  "description" : "Index of the chosen item in the numbered list",
+                  "type" : "integer"
+                },
+                "name" : {
+                  "description" : "The chosen item's name, copied exactly as it appears in the list",
+                  "type" : "string"
+                }
+              },
+              "required" : [
+                "index",
+                "name",
+                "details"
+              ],
+              "title" : "NamedPick",
+              "type" : "object",
+              "x-order" : [
+                "index",
+                "name",
+                "details"
+              ]
+            }
+          },
+          "additionalProperties" : false,
+          "properties" : {
+            "label" : {
+              "description" : "Short label that describes the two chosen items",
+              "type" : "string"
+            },
+            "picks" : {
+              "description" : "Exactly 2 items from the numbered list that go together",
+              "items" : {
+                "$ref" : "#/$defs/NamedPick"
+              },
+              "maxItems" : 2,
+              "minItems" : 2,
+              "type" : "array"
+            },
+            "reason" : {
+              "description" : "One short sentence on why these two",
+              "type" : "string"
+            }
+          },
+          "required" : [
+            "picks",
+            "label",
+            "reason"
+          ],
+          "title" : "NameFirstAnswer",
+          "type" : "object",
+          "x-order" : [
+            "picks",
+            "label",
+            "reason"
+          ]
+        }
+      },
+      "response" : {
+        "json" : {
+          "label" : "Mexican pair",
+          "picks" : [
+            {
+              "details" : [
+                "Chicken enchiladas wrapped in tortillas",
+                "Crispy beef tacos using tortillas",
+                "Cheese quesadillas on tortillas"
+              ],
+              "index" : 0,
+              "name" : "Tortillas"
+            },
+            {
+              "details" : [
+                "Guacamole with avocado",
+                "Avocado-topped tostadas",
+                "Avocado and black bean burrito"
+              ],
+              "index" : 1,
+              "name" : "Avocado"
+            }
+          ],
+          "reason" : "Both ingredients are core to Mexican cuisine and complement each other in dishes."
+        },
+        "outputTokens" : 111
+      }
+    }
+  ],
+  "machine" : "Mac16,12",
+  "version" : 1
+}

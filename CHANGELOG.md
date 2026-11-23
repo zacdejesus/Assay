@@ -31,6 +31,12 @@ All notable changes to Assay are documented here. The format is loosely based on
 - Drift report: `Drift.check` asks the current model a tape's requests again and classifies
   each case; `Drift.compare` compares two tapes; the `assay` command prints a Markdown report.
   Tapes replaced by a different model's answers are kept under `generations/` (decision 0006).
+- `CassetteError.missingEntitlement`: recording from Private Cloud Compute in a process without
+  its entitlement (`swift test`, command-line tools) now says so and what to do, instead of an
+  unnamed `LanguageModelError`. Guide in `docs/guides/recording-private-cloud-compute.md`.
+- `Examples/PickTwo`: a pick-two-items feature in two domains (gym, meals), tested from tapes
+  (on-device and Private Cloud Compute), as an Apple `Evaluation`, with drift and a live
+  experiment; `RecorderHost`, a signed Mac app that records the PCC tapes.
 
 ### Changed
 - README rewritten to match roadmap v2.

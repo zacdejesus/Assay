@@ -165,12 +165,17 @@ the model assets actually differ. `--update` keeps the new answers and moves the
 So far it has only been run against the same model that recorded the tapes (9 of 9
 unchanged). It hasn't seen a real model change yet.
 
-## Example app
+## Examples
 
 [Examples/TokenSpeed](Examples/TokenSpeed): an iOS and macOS app that shows how many tokens
 per second the on-device model generates, with a fallback screen when the model can't be used.
 The app doesn't import Assay; its tests do, and they run in a tenth of a second without
 Apple Intelligence.
+
+[Examples/PickTwo](Examples/PickTwo): a feature that asks the model to pick two items that go
+together, in two domains (gym, meals), tested with tapes, an Apple `Evaluation`, drift and a live
+experiment, on-device and on Private Cloud Compute. The experiment found that the model takes
+the first category its instructions list, whatever the user's history, and what fixed it.
 
 ## Roadmap
 

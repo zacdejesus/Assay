@@ -201,17 +201,54 @@ public final class Cassette: Sendable {
     struct Recorder: Sendable {
         var capabilities: LanguageModelCapabilities
         var makeSession: @Sendable (Transcript) -> LanguageModelSession
+        /// Whether the recorded model is Private Cloud Compute, whose failures without the
+        /// entitlement are translated (``CassetteError/missingEntitlement(model:entitlement:)``).
+        var isPrivateCloudCompute = false
 
-        init(capabilities: LanguageModelCapabilities, makeSession: @escaping @Sendable (Transcript) -> LanguageModelSession) {
+        init(
+            capabilities: LanguageModelCapabilities,
+            isPrivateCloudCompute: Bool = false,
+            makeSession: @escaping @Sendable (Transcript) -> LanguageModelSession
+        ) {
             self.capabilities = capabilities
+            self.isPrivateCloudCompute = isPrivateCloudCompute
             self.makeSession = makeSession
         }
 
         init(_ base: some LanguageModel) {
             self.init(
                 capabilities: base.capabilities,
+                isPrivateCloudCompute: base is PrivateCloudComputeLanguageModel,
                 makeSession: { transcript in LanguageModelSession(model: base, transcript: transcript) }
             )
+        }
+
+        /// Runs a call to the model, translating the one failure that says nothing on its own:
+        /// Private Cloud Compute from a process without its entitlement. It reports itself as
+        /// available and then fails every request with `ModelManagerError` 1046, wrapped in an
+        /// unnamed `LanguageModelError` (seen under `swift test` and in an unsigned command-line
+        /// binary, macOS 27.2.1).
+        nonisolated(nonsending) func calling<T>(_ body: () async throws -> T) async throws -> T {
+            do {
+                return try await body()
+            } catch where isPrivateCloudCompute && Self.isMissingPrivateCloudComputeEntitlement(error) {
+                throw CassetteError.missingEntitlement(
+                    model: "Private Cloud Compute",
+                    entitlement: "com.apple.developer.private-cloud-compute"
+                )
+            }
+        }
+
+        static func isMissingPrivateCloudComputeEntitlement(_ error: any Error) -> Bool {
+            var pending: [NSError] = [error as NSError]
+            var seen = 0
+            while let next = pending.popLast(), seen < 32 {
+                seen += 1
+                if next.domain == "ModelManagerServices.ModelManagerError", next.code == 1046 { return true }
+                if let underlying = next.userInfo[NSUnderlyingErrorKey] as? NSError { pending.append(underlying) }
+                if let multiple = next.userInfo[NSMultipleUnderlyingErrorsKey] as? [NSError] { pending += multiple }
+            }
+            return false
         }
 
         /// Asks the model, and returns the answer in the form a tape stores.
@@ -237,9 +274,11 @@ public final class Cassette: Sendable {
             let response: Tape.Response
             let entries: [Transcript.Entry]
             if let schema = call.schema {
-                let result = try await session.respond(
-                    to: call.prompt, schema: schema, options: options, contextOptions: call.contextOptions
-                )
+                let result = try await calling {
+                    try await session.respond(
+                        to: call.prompt, schema: schema, options: options, contextOptions: call.contextOptions
+                    )
+                }
                 var json = try JSONValue(json: result.rawContent.jsonString)
                 if let redact {
                     json = try JSONValue(json: redact(try json.canonicalString()))
@@ -247,9 +286,11 @@ public final class Cassette: Sendable {
                 response = Tape.Response(json: json, outputTokens: result.usage.output.totalTokenCount)
                 entries = Array(result.transcriptEntries)
             } else {
-                let result = try await session.respond(
-                    to: call.prompt, options: options, contextOptions: call.contextOptions
-                )
+                let result = try await calling {
+                    try await session.respond(
+                        to: call.prompt, options: options, contextOptions: call.contextOptions
+                    )
+                }
                 response = Tape.Response(
                     text: redact?(result.content) ?? result.content,
                     outputTokens: result.usage.output.totalTokenCount
@@ -477,6 +518,8 @@ public enum CassetteError: Error, CustomStringConvertible, LocalizedError {
     case tapeInUse(path: String)
     /// `ASSAY_CASSETTE` has a value that isn't `record`, `replay` or `auto`.
     case invalidMode(String)
+    /// The model being recorded needs an entitlement this process doesn't have.
+    case missingEntitlement(model: String, entitlement: String)
 
     public var description: String {
         switch self {
@@ -512,6 +555,14 @@ public enum CassetteError: Error, CustomStringConvertible, LocalizedError {
             return "Another cassette is already recording to \(path). Give each test its own tape name."
         case .invalidMode(let value):
             return "ASSAY_CASSETTE is \"\(value)\"; it has to be record, replay or auto."
+        case .missingEntitlement(let model, let entitlement):
+            return """
+                \(model) failed every request although it reports itself available: this process \
+                most likely lacks the \(entitlement) entitlement (ModelManagerError 1046). \
+                `swift test` and command-line tools can't have it. Record from a test hosted in an \
+                app signed with that capability, then commit the tape; replaying needs nothing. \
+                See docs/guides/recording-private-cloud-compute.md.
+                """
         }
     }
 
