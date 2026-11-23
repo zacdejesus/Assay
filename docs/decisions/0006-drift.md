@@ -1,8 +1,8 @@
 # 0006: Drift report
 
-- **Status:** Proposed (2026-11-16). Drafted and implemented by Claude after Experiment E; the
-  three "Decide" questions of roadmap M4 were answered with Claude's recommendations and are
-  Alejandro's to confirm.
+- **Status:** Accepted (2026-11-23). Proposed 2026-11-16, drafted and implemented by Claude
+  after Experiment E; the three "Decide" questions of roadmap M4 were answered with Claude's
+  recommendations, confirmed after the macOS 27.2.1 run.
 - **Context docs:** [roadmap M4](../roadmap.md), [0005: Cassette](0005-cassette.md)
 - **Code:** `Sources/Assay/Drift.swift`, `Sources/AssayCLI/main.swift`, `Tests/AssayTests/DriftTests.swift`
 
@@ -67,6 +67,7 @@ where there is no pass criterion: `--fail-on-change`.
 
 - ➕ One command after an OS update: `scripts/test.sh drift`.
 - ➕ Old answers are kept by default; nothing has to be remembered before recording again.
-- ➖ Not yet run across a real model change. The first one (macOS 27.2.1, pending) is the test.
+- ➖ Not yet run across a real model change. macOS 27.2.1 (2026-11-20) shipped the same model
+  assets: 9 of 9 unchanged, and the report said "the same on both sides", as designed.
 - ➖ "Unchanged" means byte-identical text. Any rewording is "changed", which is why changed
   is information and not a failure.

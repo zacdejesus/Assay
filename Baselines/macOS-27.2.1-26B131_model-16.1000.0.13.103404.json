@@ -1,0 +1,78 @@
+{
+  "answers" : [
+    {
+      "id" : "capital",
+      "output" : "\"Paris\"",
+      "outputTokens" : 3,
+      "prompt" : "What is the capital of France? Answer in one word.",
+      "repeatable" : true,
+      "structured" : false
+    },
+    {
+      "id" : "sum",
+      "output" : "\"43\"",
+      "outputTokens" : 5,
+      "prompt" : "What is 17 + 26? Answer with the number only.",
+      "repeatable" : true,
+      "structured" : false
+    },
+    {
+      "id" : "forest",
+      "output" : "\"Golden leaves drift gently from the trees, carpeting the mossy ground. Crisp air carries the scent of pine and damp earth. Sunlight filters through the canopy, casting dappled shadows. Birds chirp softly as the path winds deeper into the woods. The forest hums with quiet beauty, a peaceful escape from the world beyond.\"",
+      "outputTokens" : 69,
+      "prompt" : "Write a short paragraph, about 60 words, describing a walk through a forest in autumn.",
+      "repeatable" : true,
+      "structured" : false
+    },
+    {
+      "id" : "summarize",
+      "output" : "\"The meeting was rescheduled from Tuesday to Thursday due to the client's travel, and the agenda now includes the budget review.\"",
+      "outputTokens" : 31,
+      "prompt" : "Summarize in one sentence: The meeting moved from Tuesday to Thursday because the client is travelling, and the agenda now includes the budget review.",
+      "repeatable" : true,
+      "structured" : false
+    },
+    {
+      "id" : "sentiment",
+      "output" : "\"Neutral\"",
+      "outputTokens" : 3,
+      "prompt" : "Classify the sentiment of this review as positive, negative or neutral. Answer with one word. Review: The battery lasts all day but the screen scratches easily.",
+      "repeatable" : true,
+      "structured" : false
+    },
+    {
+      "id" : "formal",
+      "output" : "\"Could you please send me the report as soon as possible?\"",
+      "outputTokens" : 15,
+      "prompt" : "Rewrite this sentence to sound more formal: hey, can u send me the report asap?",
+      "repeatable" : true,
+      "structured" : false
+    },
+    {
+      "id" : "steps",
+      "output" : "\"1. Boil water in a pot.  \\n2. Add pasta to boiling water.  \\n3. Cook until al dente.\"",
+      "outputTokens" : 37,
+      "prompt" : "List three steps to cook pasta. One short line per step.",
+      "repeatable" : true,
+      "structured" : false
+    },
+    {
+      "id" : "trail",
+      "output" : "{\"highlights\":[\"dense pine trees\",\"rocky terrain\",\"birdsong\"],\"lengthInKilometers\":5,\"name\":\"Pine Forest Trail\"}",
+      "outputTokens" : 39,
+      "prompt" : "Describe a hiking trail in a pine forest.",
+      "repeatable" : true,
+      "structured" : true
+    }
+  ],
+  "assetIDs" : [
+    "com.apple.fm.language.instruct_3b.fm_api_generic.draft?variant=generic_sparse_16.1000.81614.13.205144,0",
+    "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
+    "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
+  ],
+  "formatVersion" : 1,
+  "maximumResponseTokens" : 160,
+  "recordedAt" : "2026-11-20T14:09:04Z",
+  "sampling" : "greedy",
+  "systemVersion" : "Version 27.2.1 (Build 26B131)"
+}

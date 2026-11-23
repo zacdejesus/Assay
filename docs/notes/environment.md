@@ -1,11 +1,11 @@
 # Environment
 
-> Checked 2026-11-15. After any OS or Xcode update, follow the [update routine](#update-routine).
+> Checked 2026-11-23. After any OS or Xcode update, follow the [update routine](#update-routine).
 
 | What | Value |
 |---|---|
 | Mac | Apple M4 (Apple Intelligence eligible) |
-| macOS | 27.2 (26B123), seen 2026-11-15. Was 27.0.1 (26A434) on 2026-11-07 and 26.6.2 on 2026-09-22. |
+| macOS | 27.2.1 (26B131), seen 2026-11-20. Was 27.2 (26B123) on 2026-11-15, 27.0.1 (26A434) on 2026-11-07 and 26.6.2 on 2026-09-22. |
 | Xcode | 27.1 (27A9275) |
 | Swift | 6.4 (swiftlang-6.4.0.34.1), SwiftPM 6.4.0-dev |
 | Apple Intelligence | Enabled on this Mac |
@@ -48,9 +48,16 @@ the tokenizer and the draft model have their own versions.
 |---|---|---|
 | 2026-11-07 | 27.0.1 (26A434) | `...fm_api_generic_3b?variant=generic_sparse_16.1.0.13.103120,0` |
 | 2026-11-15 | 27.2 (26B123) | `...fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0` |
+| 2026-11-20 | 27.2.1 (26B131) | the same (`...16.1000.0.13.103404,0`); tokenizer and draft model also the same |
 
 The system and the model changed between the two checks. Nothing was recorded from the first
 model, so how it answered can't be compared any more. Baselines exist from the second one on.
+
+**27.2 → 27.2.1 did not change the model.** All three assets kept their IDs, and the drift
+report asked the 9 recorded requests again: 9 unchanged, 225 output tokens on both sides.
+An OS update is not always a model update, which is why drift compares `assetIDs` and not the
+build (decision 0006). The routine still has to run after every update: it is the only way to
+know.
 
 ## Update routine
 
