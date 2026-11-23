@@ -88,13 +88,13 @@ architecture changes. Find out before writing anything else.
 - Swift 6 strict concurrency basics (`Sendable`, actors).
 
 **Build**
-- [ ] `Package.swift` + one green `swift test`.
-- [ ] Example app ("recipe steps") using `LanguageModelSession` with a fallback screen.
-- [ ] **Experiment A: fake.** Smallest `LanguageModel` + executor that always answers
+- [x] `Package.swift` + one green `swift test`.
+- [x] Example app ("recipe steps") using `LanguageModelSession` with a fallback screen.
+- [x] **Experiment A: fake.** Smallest `LanguageModel` + executor that always answers
       `"hello"`, used via `LanguageModelSession(model:)` in a unit test.
-- [ ] **Experiment B: wrap.** Can my executor *forward* to another model's executor
+- [x] **Experiment B: wrap.** Can my executor *forward* to another model's executor
       (e.g. `SystemLanguageModel`)? Is that executor even public/constructible?
-- [ ] Notes in `docs/notes/foundationmodels.md` and `docs/notes/environment.md`.
+- [x] Notes in `docs/notes/foundationmodels.md` and `docs/notes/environment.md`.
 
 **Decide**
 - **Minimum OS: 27+ only?** Recommended: yes. Apple's protocol only exists there, and
