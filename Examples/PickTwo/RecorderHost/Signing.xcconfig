@@ -1,0 +1,14 @@
+// Signing for RecorderHost. Put your own values in Local.xcconfig, next to this file (it is
+// git-ignored):
+//
+//   DEVELOPMENT_TEAM = ABCDE12345
+//   RECORDER_BUNDLE_ID = com.yourname.picktwo.recorder
+//
+// Your account needs the Private Cloud Compute entitlement, and the App ID needs the capability:
+// open the project once in Xcode, Signing & Capabilities, + Capability, Private Cloud Compute.
+
+RECORDER_BUNDLE_ID = com.example.picktwo.recorder
+#include? "Local.xcconfig"
+PRODUCT_BUNDLE_IDENTIFIER = $(RECORDER_BUNDLE_ID)
+CODE_SIGN_STYLE = Automatic
+CODE_SIGN_ENTITLEMENTS = RecorderHost.entitlements

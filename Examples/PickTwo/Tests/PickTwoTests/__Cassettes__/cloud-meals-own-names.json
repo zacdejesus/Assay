@@ -1,0 +1,133 @@
+{
+  "assay" : "0.2.0-dev",
+  "interactions" : [
+    {
+      "key" : "1c3c60e1003d8126ce00e1152c14ed0b5bb9d8d256c34773741b4ef2e4c42570",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_server_v2.base_zap.generic_11.3.0",
+          "com.apple.fm.language.instruct_server_v2.fm_api.generic_11.170003.18"
+        ],
+        "recordedAt" : "2026-11-23T18:40:17Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "seconds" : 1.303,
+        "systemVersion" : "6B85"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "instructions" : "You plan a home-cooked dinner.\nFrom the numbered list of AVAILABLE ingredients, choose EXACTLY 2 that belong to the same cuisine (italian: pasta, tomatoes, basil, mozzarella; mexican: tortillas, black beans, avocado, lime; japanese: rice, nori, tofu, miso).\nRefer to each one by its index.\nFor each chosen ingredient, list 3 dishes of that cuisine built around that ingredient.",
+        "options" : {
+          "includeSchemaInPrompt" : true,
+          "maximumResponseTokens" : 512,
+          "sampling" : {
+            "mode" : "greedy"
+          }
+        },
+        "prompt" : "Available ingredients: 0=Rice, 1=Nori\n\nWhich two ingredients should I cook with tonight, with 3 dishes for each?",
+        "schema" : {
+          "$defs" : {
+            "NamedPick" : {
+              "additionalProperties" : false,
+              "properties" : {
+                "details" : {
+                  "description" : "Three suggestions for this item",
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "maxItems" : 3,
+                  "minItems" : 3,
+                  "type" : "array"
+                },
+                "index" : {
+                  "description" : "Index of the chosen item in the numbered list",
+                  "type" : "integer"
+                },
+                "name" : {
+                  "description" : "The chosen item's name, copied exactly as it appears in the list",
+                  "type" : "string"
+                }
+              },
+              "required" : [
+                "index",
+                "name",
+                "details"
+              ],
+              "title" : "NamedPick",
+              "type" : "object",
+              "x-order" : [
+                "index",
+                "name",
+                "details"
+              ]
+            }
+          },
+          "additionalProperties" : false,
+          "properties" : {
+            "label" : {
+              "description" : "Short label that describes the two chosen items",
+              "type" : "string"
+            },
+            "picks" : {
+              "description" : "Exactly 2 items from the numbered list that go together",
+              "items" : {
+                "$ref" : "#/$defs/NamedPick"
+              },
+              "maxItems" : 2,
+              "minItems" : 2,
+              "type" : "array"
+            },
+            "reason" : {
+              "description" : "One short sentence on why these two",
+              "type" : "string"
+            }
+          },
+          "required" : [
+            "picks",
+            "label",
+            "reason"
+          ],
+          "title" : "NameFirstAnswer",
+          "type" : "object",
+          "x-order" : [
+            "picks",
+            "label",
+            "reason"
+          ]
+        }
+      },
+      "response" : {
+        "json" : {
+          "label" : "Japanese staples",
+          "picks" : [
+            {
+              "details" : [
+                "Sushi rolls with seasoned rice",
+                "Rice bowl with miso soup",
+                "Rice porridge with tofu"
+              ],
+              "index" : 0,
+              "name" : "Rice"
+            },
+            {
+              "details" : [
+                "Hand rolls wrapped in nori",
+                "Nori-topped rice bowl",
+                "Nori soup with tofu"
+              ],
+              "index" : 1,
+              "name" : "Nori"
+            }
+          ],
+          "reason" : "Rice and nori are both core Japanese ingredients that pair naturally in dishes."
+        },
+        "outputTokens" : 113
+      }
+    }
+  ],
+  "machine" : "Mac16,12",
+  "version" : 1
+}

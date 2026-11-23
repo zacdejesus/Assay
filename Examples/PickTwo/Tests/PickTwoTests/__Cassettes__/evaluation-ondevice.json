@@ -1,0 +1,1531 @@
+{
+  "assay" : "0.2.0-dev",
+  "interactions" : [
+    {
+      "key" : "bda38187a62ea6fd228e7658ddb4a2c6582c30e33d39a04b3e1e15e8dfd3c5c3",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_3b.fm_api_generic.draft?variant=generic_sparse_16.1000.81614.13.205144,0",
+          "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
+          "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
+        ],
+        "recordedAt" : "2026-11-23T18:36:08Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "seconds" : 5.719,
+        "systemVersion" : "Version 27.2.1 (Build 26B131)"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "instructions" : "You plan a gym session.\nFrom the numbered list of AVAILABLE muscle groups, choose EXACTLY 2 that belong to the same kind of training day (push: chest, shoulders, triceps; pull: back, biceps, forearms; legs: legs, glutes, calves, abs, core).\nRefer to each one by its index.\nFor each chosen group, list 3 exercises that train that group and no other.",
+        "options" : {
+          "includeSchemaInPrompt" : true,
+          "maximumResponseTokens" : 512,
+          "sampling" : {
+            "mode" : "greedy"
+          }
+        },
+        "prompt" : "Available muscle groups: 0=Chest, 1=Shoulders, 2=Triceps\n\nWhich two groups should I train today, with 3 exercises for each?",
+        "schema" : {
+          "$defs" : {
+            "NamedPick" : {
+              "additionalProperties" : false,
+              "properties" : {
+                "details" : {
+                  "description" : "Three suggestions for this item",
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "maxItems" : 3,
+                  "minItems" : 3,
+                  "type" : "array"
+                },
+                "index" : {
+                  "description" : "Index of the chosen item in the numbered list",
+                  "type" : "integer"
+                },
+                "name" : {
+                  "description" : "The chosen item's name, copied exactly as it appears in the list",
+                  "type" : "string"
+                }
+              },
+              "required" : [
+                "index",
+                "name",
+                "details"
+              ],
+              "title" : "NamedPick",
+              "type" : "object",
+              "x-order" : [
+                "index",
+                "name",
+                "details"
+              ]
+            }
+          },
+          "additionalProperties" : false,
+          "properties" : {
+            "label" : {
+              "description" : "Short label that describes the two chosen items",
+              "type" : "string"
+            },
+            "picks" : {
+              "description" : "Exactly 2 items from the numbered list that go together",
+              "items" : {
+                "$ref" : "#/$defs/NamedPick"
+              },
+              "maxItems" : 2,
+              "minItems" : 2,
+              "type" : "array"
+            },
+            "reason" : {
+              "description" : "One short sentence on why these two",
+              "type" : "string"
+            }
+          },
+          "required" : [
+            "picks",
+            "label",
+            "reason"
+          ],
+          "title" : "NameFirstAnswer",
+          "type" : "object",
+          "x-order" : [
+            "picks",
+            "label",
+            "reason"
+          ]
+        }
+      },
+      "response" : {
+        "json" : {
+          "label" : "Push Training",
+          "picks" : [
+            {
+              "details" : [
+                "Bench Press",
+                "Push-ups",
+                "Chest Fly"
+              ],
+              "index" : 0,
+              "name" : "Chest"
+            },
+            {
+              "details" : [
+                "Lateral Raises",
+                "Front Raises",
+                "Overhead Press"
+              ],
+              "index" : 1,
+              "name" : "Shoulders"
+            }
+          ],
+          "reason" : "Chest and shoulders are both part of a push training day."
+        },
+        "outputTokens" : 91
+      }
+    },
+    {
+      "key" : "a32fa71390157e618a24b45e0c180f38756a4b31029abc473a8a85b140098eae",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_3b.fm_api_generic.draft?variant=generic_sparse_16.1000.81614.13.205144,0",
+          "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
+          "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
+        ],
+        "recordedAt" : "2026-11-23T18:36:12Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "seconds" : 4.443,
+        "systemVersion" : "Version 27.2.1 (Build 26B131)"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "instructions" : "You plan a gym session.\nFrom the numbered list of AVAILABLE muscle groups, choose EXACTLY 2 that belong to the same kind of training day (push: chest, shoulders, triceps; pull: back, biceps, forearms; legs: legs, glutes, calves, abs, core).\nRefer to each one by its index.\nFor each chosen group, list 3 exercises that train that group and no other.",
+        "options" : {
+          "includeSchemaInPrompt" : true,
+          "maximumResponseTokens" : 512,
+          "sampling" : {
+            "mode" : "greedy"
+          }
+        },
+        "prompt" : "Available muscle groups: 0=Legs, 1=Abs\n\nWhich two groups should I train today, with 3 exercises for each?",
+        "schema" : {
+          "$defs" : {
+            "NamedPick" : {
+              "additionalProperties" : false,
+              "properties" : {
+                "details" : {
+                  "description" : "Three suggestions for this item",
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "maxItems" : 3,
+                  "minItems" : 3,
+                  "type" : "array"
+                },
+                "index" : {
+                  "description" : "Index of the chosen item in the numbered list",
+                  "type" : "integer"
+                },
+                "name" : {
+                  "description" : "The chosen item's name, copied exactly as it appears in the list",
+                  "type" : "string"
+                }
+              },
+              "required" : [
+                "index",
+                "name",
+                "details"
+              ],
+              "title" : "NamedPick",
+              "type" : "object",
+              "x-order" : [
+                "index",
+                "name",
+                "details"
+              ]
+            }
+          },
+          "additionalProperties" : false,
+          "properties" : {
+            "label" : {
+              "description" : "Short label that describes the two chosen items",
+              "type" : "string"
+            },
+            "picks" : {
+              "description" : "Exactly 2 items from the numbered list that go together",
+              "items" : {
+                "$ref" : "#/$defs/NamedPick"
+              },
+              "maxItems" : 2,
+              "minItems" : 2,
+              "type" : "array"
+            },
+            "reason" : {
+              "description" : "One short sentence on why these two",
+              "type" : "string"
+            }
+          },
+          "required" : [
+            "picks",
+            "label",
+            "reason"
+          ],
+          "title" : "NameFirstAnswer",
+          "type" : "object",
+          "x-order" : [
+            "picks",
+            "label",
+            "reason"
+          ]
+        }
+      },
+      "response" : {
+        "json" : {
+          "label" : "Legs and Abs",
+          "picks" : [
+            {
+              "details" : [
+                "Squats",
+                "Lunges",
+                "Leg Press"
+              ],
+              "index" : 0,
+              "name" : "Legs"
+            },
+            {
+              "details" : [
+                "Planks",
+                "Leg Raises",
+                "Crunches"
+              ],
+              "index" : 1,
+              "name" : "Abs"
+            }
+          ],
+          "reason" : "Both are lower body focused, with legs being the primary and abs supporting core stability."
+        },
+        "outputTokens" : 93
+      }
+    },
+    {
+      "key" : "3eb49a9102d49004ac8b412d053018911eb283cea04d79927c537d7d33150cd1",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_3b.fm_api_generic.draft?variant=generic_sparse_16.1000.81614.13.205144,0",
+          "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
+          "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
+        ],
+        "recordedAt" : "2026-11-23T18:36:17Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "seconds" : 4.48,
+        "systemVersion" : "Version 27.2.1 (Build 26B131)"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "instructions" : "You plan a gym session.\nFrom the numbered list of AVAILABLE muscle groups, choose EXACTLY 2 that belong to the same kind of training day (push: chest, shoulders, triceps; pull: back, biceps, forearms; legs: legs, glutes, calves, abs, core).\nRefer to each one by its index.\nFor each chosen group, list 3 exercises that train that group and no other.",
+        "options" : {
+          "includeSchemaInPrompt" : true,
+          "maximumResponseTokens" : 512,
+          "sampling" : {
+            "mode" : "greedy"
+          }
+        },
+        "prompt" : "Available muscle groups: 0=Back, 1=Biceps\n\nWhich two groups should I train today, with 3 exercises for each?",
+        "schema" : {
+          "$defs" : {
+            "NamedPick" : {
+              "additionalProperties" : false,
+              "properties" : {
+                "details" : {
+                  "description" : "Three suggestions for this item",
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "maxItems" : 3,
+                  "minItems" : 3,
+                  "type" : "array"
+                },
+                "index" : {
+                  "description" : "Index of the chosen item in the numbered list",
+                  "type" : "integer"
+                },
+                "name" : {
+                  "description" : "The chosen item's name, copied exactly as it appears in the list",
+                  "type" : "string"
+                }
+              },
+              "required" : [
+                "index",
+                "name",
+                "details"
+              ],
+              "title" : "NamedPick",
+              "type" : "object",
+              "x-order" : [
+                "index",
+                "name",
+                "details"
+              ]
+            }
+          },
+          "additionalProperties" : false,
+          "properties" : {
+            "label" : {
+              "description" : "Short label that describes the two chosen items",
+              "type" : "string"
+            },
+            "picks" : {
+              "description" : "Exactly 2 items from the numbered list that go together",
+              "items" : {
+                "$ref" : "#/$defs/NamedPick"
+              },
+              "maxItems" : 2,
+              "minItems" : 2,
+              "type" : "array"
+            },
+            "reason" : {
+              "description" : "One short sentence on why these two",
+              "type" : "string"
+            }
+          },
+          "required" : [
+            "picks",
+            "label",
+            "reason"
+          ],
+          "title" : "NameFirstAnswer",
+          "type" : "object",
+          "x-order" : [
+            "picks",
+            "label",
+            "reason"
+          ]
+        }
+      },
+      "response" : {
+        "json" : {
+          "label" : "Pull and Biceps",
+          "picks" : [
+            {
+              "details" : [
+                "Pull-ups",
+                "Lat pulldowns",
+                "Bent-over rows"
+              ],
+              "index" : 0,
+              "name" : "Back"
+            },
+            {
+              "details" : [
+                "Barbell curls",
+                "Hammer curls",
+                "Concentration curls"
+              ],
+              "index" : 1,
+              "name" : "Biceps"
+            }
+          ],
+          "reason" : "These two muscle groups are part of the pull training day, focusing on back and arm strength."
+        },
+        "outputTokens" : 109
+      }
+    },
+    {
+      "key" : "3eb49a9102d49004ac8b412d053018911eb283cea04d79927c537d7d33150cd1",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_3b.fm_api_generic.draft?variant=generic_sparse_16.1000.81614.13.205144,0",
+          "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
+          "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
+        ],
+        "recordedAt" : "2026-11-23T18:36:21Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "seconds" : 4.493,
+        "systemVersion" : "Version 27.2.1 (Build 26B131)"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "instructions" : "You plan a gym session.\nFrom the numbered list of AVAILABLE muscle groups, choose EXACTLY 2 that belong to the same kind of training day (push: chest, shoulders, triceps; pull: back, biceps, forearms; legs: legs, glutes, calves, abs, core).\nRefer to each one by its index.\nFor each chosen group, list 3 exercises that train that group and no other.",
+        "options" : {
+          "includeSchemaInPrompt" : true,
+          "maximumResponseTokens" : 512,
+          "sampling" : {
+            "mode" : "greedy"
+          }
+        },
+        "prompt" : "Available muscle groups: 0=Back, 1=Biceps\n\nWhich two groups should I train today, with 3 exercises for each?",
+        "schema" : {
+          "$defs" : {
+            "NamedPick" : {
+              "additionalProperties" : false,
+              "properties" : {
+                "details" : {
+                  "description" : "Three suggestions for this item",
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "maxItems" : 3,
+                  "minItems" : 3,
+                  "type" : "array"
+                },
+                "index" : {
+                  "description" : "Index of the chosen item in the numbered list",
+                  "type" : "integer"
+                },
+                "name" : {
+                  "description" : "The chosen item's name, copied exactly as it appears in the list",
+                  "type" : "string"
+                }
+              },
+              "required" : [
+                "index",
+                "name",
+                "details"
+              ],
+              "title" : "NamedPick",
+              "type" : "object",
+              "x-order" : [
+                "index",
+                "name",
+                "details"
+              ]
+            }
+          },
+          "additionalProperties" : false,
+          "properties" : {
+            "label" : {
+              "description" : "Short label that describes the two chosen items",
+              "type" : "string"
+            },
+            "picks" : {
+              "description" : "Exactly 2 items from the numbered list that go together",
+              "items" : {
+                "$ref" : "#/$defs/NamedPick"
+              },
+              "maxItems" : 2,
+              "minItems" : 2,
+              "type" : "array"
+            },
+            "reason" : {
+              "description" : "One short sentence on why these two",
+              "type" : "string"
+            }
+          },
+          "required" : [
+            "picks",
+            "label",
+            "reason"
+          ],
+          "title" : "NameFirstAnswer",
+          "type" : "object",
+          "x-order" : [
+            "picks",
+            "label",
+            "reason"
+          ]
+        }
+      },
+      "response" : {
+        "json" : {
+          "label" : "Pull and Biceps",
+          "picks" : [
+            {
+              "details" : [
+                "Pull-ups",
+                "Lat pulldowns",
+                "Bent-over rows"
+              ],
+              "index" : 0,
+              "name" : "Back"
+            },
+            {
+              "details" : [
+                "Barbell curls",
+                "Hammer curls",
+                "Concentration curls"
+              ],
+              "index" : 1,
+              "name" : "Biceps"
+            }
+          ],
+          "reason" : "These two muscle groups are part of the pull training day, focusing on back and arm strength."
+        },
+        "outputTokens" : 109
+      }
+    },
+    {
+      "key" : "3eb49a9102d49004ac8b412d053018911eb283cea04d79927c537d7d33150cd1",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_3b.fm_api_generic.draft?variant=generic_sparse_16.1000.81614.13.205144,0",
+          "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
+          "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
+        ],
+        "recordedAt" : "2026-11-23T18:36:26Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "seconds" : 4.468,
+        "systemVersion" : "Version 27.2.1 (Build 26B131)"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "instructions" : "You plan a gym session.\nFrom the numbered list of AVAILABLE muscle groups, choose EXACTLY 2 that belong to the same kind of training day (push: chest, shoulders, triceps; pull: back, biceps, forearms; legs: legs, glutes, calves, abs, core).\nRefer to each one by its index.\nFor each chosen group, list 3 exercises that train that group and no other.",
+        "options" : {
+          "includeSchemaInPrompt" : true,
+          "maximumResponseTokens" : 512,
+          "sampling" : {
+            "mode" : "greedy"
+          }
+        },
+        "prompt" : "Available muscle groups: 0=Back, 1=Biceps\n\nWhich two groups should I train today, with 3 exercises for each?",
+        "schema" : {
+          "$defs" : {
+            "NamedPick" : {
+              "additionalProperties" : false,
+              "properties" : {
+                "details" : {
+                  "description" : "Three suggestions for this item",
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "maxItems" : 3,
+                  "minItems" : 3,
+                  "type" : "array"
+                },
+                "index" : {
+                  "description" : "Index of the chosen item in the numbered list",
+                  "type" : "integer"
+                },
+                "name" : {
+                  "description" : "The chosen item's name, copied exactly as it appears in the list",
+                  "type" : "string"
+                }
+              },
+              "required" : [
+                "index",
+                "name",
+                "details"
+              ],
+              "title" : "NamedPick",
+              "type" : "object",
+              "x-order" : [
+                "index",
+                "name",
+                "details"
+              ]
+            }
+          },
+          "additionalProperties" : false,
+          "properties" : {
+            "label" : {
+              "description" : "Short label that describes the two chosen items",
+              "type" : "string"
+            },
+            "picks" : {
+              "description" : "Exactly 2 items from the numbered list that go together",
+              "items" : {
+                "$ref" : "#/$defs/NamedPick"
+              },
+              "maxItems" : 2,
+              "minItems" : 2,
+              "type" : "array"
+            },
+            "reason" : {
+              "description" : "One short sentence on why these two",
+              "type" : "string"
+            }
+          },
+          "required" : [
+            "picks",
+            "label",
+            "reason"
+          ],
+          "title" : "NameFirstAnswer",
+          "type" : "object",
+          "x-order" : [
+            "picks",
+            "label",
+            "reason"
+          ]
+        }
+      },
+      "response" : {
+        "json" : {
+          "label" : "Pull and Biceps",
+          "picks" : [
+            {
+              "details" : [
+                "Pull-ups",
+                "Lat pulldowns",
+                "Bent-over rows"
+              ],
+              "index" : 0,
+              "name" : "Back"
+            },
+            {
+              "details" : [
+                "Barbell curls",
+                "Hammer curls",
+                "Concentration curls"
+              ],
+              "index" : 1,
+              "name" : "Biceps"
+            }
+          ],
+          "reason" : "These two muscle groups are part of the pull training day, focusing on back and arm strength."
+        },
+        "outputTokens" : 109
+      }
+    },
+    {
+      "key" : "7c607edf9bdd7d4c1d892f37dc8885c7386f52bd425aefdb3e48e2d3edc445de",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_3b.fm_api_generic.draft?variant=generic_sparse_16.1000.81614.13.205144,0",
+          "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
+          "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
+        ],
+        "recordedAt" : "2026-11-23T18:36:29Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "seconds" : 3.931,
+        "systemVersion" : "Version 27.2.1 (Build 26B131)"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "instructions" : "You plan a gym session.\nFrom the numbered list of AVAILABLE muscle groups, choose EXACTLY 2 that belong to the same kind of training day (push: chest, shoulders, triceps; pull: back, biceps, forearms; legs: legs, glutes, calves, abs, core).\nRefer to each one by its index.\nFor each chosen group, list 3 exercises that train that group and no other.",
+        "options" : {
+          "includeSchemaInPrompt" : true,
+          "maximumResponseTokens" : 512,
+          "sampling" : {
+            "mode" : "greedy"
+          }
+        },
+        "prompt" : "Available muscle groups: 0=Legs, 1=Core\n\nWhich two groups should I train today, with 3 exercises for each?",
+        "schema" : {
+          "$defs" : {
+            "NamedPick" : {
+              "additionalProperties" : false,
+              "properties" : {
+                "details" : {
+                  "description" : "Three suggestions for this item",
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "maxItems" : 3,
+                  "minItems" : 3,
+                  "type" : "array"
+                },
+                "index" : {
+                  "description" : "Index of the chosen item in the numbered list",
+                  "type" : "integer"
+                },
+                "name" : {
+                  "description" : "The chosen item's name, copied exactly as it appears in the list",
+                  "type" : "string"
+                }
+              },
+              "required" : [
+                "index",
+                "name",
+                "details"
+              ],
+              "title" : "NamedPick",
+              "type" : "object",
+              "x-order" : [
+                "index",
+                "name",
+                "details"
+              ]
+            }
+          },
+          "additionalProperties" : false,
+          "properties" : {
+            "label" : {
+              "description" : "Short label that describes the two chosen items",
+              "type" : "string"
+            },
+            "picks" : {
+              "description" : "Exactly 2 items from the numbered list that go together",
+              "items" : {
+                "$ref" : "#/$defs/NamedPick"
+              },
+              "maxItems" : 2,
+              "minItems" : 2,
+              "type" : "array"
+            },
+            "reason" : {
+              "description" : "One short sentence on why these two",
+              "type" : "string"
+            }
+          },
+          "required" : [
+            "picks",
+            "label",
+            "reason"
+          ],
+          "title" : "NameFirstAnswer",
+          "type" : "object",
+          "x-order" : [
+            "picks",
+            "label",
+            "reason"
+          ]
+        }
+      },
+      "response" : {
+        "json" : {
+          "label" : "Legs and Core",
+          "picks" : [
+            {
+              "details" : [
+                "Squats",
+                "Lunges",
+                "Leg Press"
+              ],
+              "index" : 0,
+              "name" : "Legs"
+            },
+            {
+              "details" : [
+                "Planks",
+                "Leg Raises",
+                "Russian Twists"
+              ],
+              "index" : 1,
+              "name" : "Core"
+            }
+          ],
+          "reason" : "Both are lower body focused, with Legs emphasizing strength and Core supporting stability."
+        },
+        "outputTokens" : 99
+      }
+    },
+    {
+      "key" : "2a9e3797e292404246a0604e4c336ada264c0c434d8f4d4351a564f7f40b0f69",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_3b.fm_api_generic.draft?variant=generic_sparse_16.1000.81614.13.205144,0",
+          "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
+          "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
+        ],
+        "recordedAt" : "2026-11-23T18:36:33Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "seconds" : 3.944,
+        "systemVersion" : "Version 27.2.1 (Build 26B131)"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "instructions" : "You plan a home-cooked dinner.\nFrom the numbered list of AVAILABLE ingredients, choose EXACTLY 2 that belong to the same cuisine (italian: pasta, tomatoes, basil, mozzarella; mexican: tortillas, black beans, avocado, lime; japanese: rice, nori, tofu, miso).\nRefer to each one by its index.\nFor each chosen ingredient, list 3 dishes of that cuisine built around that ingredient.",
+        "options" : {
+          "includeSchemaInPrompt" : true,
+          "maximumResponseTokens" : 512,
+          "sampling" : {
+            "mode" : "greedy"
+          }
+        },
+        "prompt" : "Available ingredients: 0=Pasta, 1=Tomatoes\n\nWhich two ingredients should I cook with tonight, with 3 dishes for each?",
+        "schema" : {
+          "$defs" : {
+            "NamedPick" : {
+              "additionalProperties" : false,
+              "properties" : {
+                "details" : {
+                  "description" : "Three suggestions for this item",
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "maxItems" : 3,
+                  "minItems" : 3,
+                  "type" : "array"
+                },
+                "index" : {
+                  "description" : "Index of the chosen item in the numbered list",
+                  "type" : "integer"
+                },
+                "name" : {
+                  "description" : "The chosen item's name, copied exactly as it appears in the list",
+                  "type" : "string"
+                }
+              },
+              "required" : [
+                "index",
+                "name",
+                "details"
+              ],
+              "title" : "NamedPick",
+              "type" : "object",
+              "x-order" : [
+                "index",
+                "name",
+                "details"
+              ]
+            }
+          },
+          "additionalProperties" : false,
+          "properties" : {
+            "label" : {
+              "description" : "Short label that describes the two chosen items",
+              "type" : "string"
+            },
+            "picks" : {
+              "description" : "Exactly 2 items from the numbered list that go together",
+              "items" : {
+                "$ref" : "#/$defs/NamedPick"
+              },
+              "maxItems" : 2,
+              "minItems" : 2,
+              "type" : "array"
+            },
+            "reason" : {
+              "description" : "One short sentence on why these two",
+              "type" : "string"
+            }
+          },
+          "required" : [
+            "picks",
+            "label",
+            "reason"
+          ],
+          "title" : "NameFirstAnswer",
+          "type" : "object",
+          "x-order" : [
+            "picks",
+            "label",
+            "reason"
+          ]
+        }
+      },
+      "response" : {
+        "json" : {
+          "label" : "Italian Ingredients",
+          "picks" : [
+            {
+              "details" : [
+                "Spaghetti Carbonara",
+                "Penne alla Vodka",
+                "Lasagna"
+              ],
+              "index" : 0,
+              "name" : "Pasta"
+            },
+            {
+              "details" : [
+                "Tomato Basil Soup",
+                "Caprese Salad",
+                "Tomato Risotto"
+              ],
+              "index" : 1,
+              "name" : "Tomatoes"
+            }
+          ],
+          "reason" : "These two ingredients are both staples in Italian cuisine, forming the foundation for classic dishes."
+        },
+        "outputTokens" : 101
+      }
+    },
+    {
+      "key" : "2f075befff059fadc5586cacc5a6f83e375885e656b8bf3ce89ed1e7f98008a4",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_3b.fm_api_generic.draft?variant=generic_sparse_16.1000.81614.13.205144,0",
+          "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
+          "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
+        ],
+        "recordedAt" : "2026-11-23T18:36:37Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "seconds" : 3.69,
+        "systemVersion" : "Version 27.2.1 (Build 26B131)"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "instructions" : "You plan a home-cooked dinner.\nFrom the numbered list of AVAILABLE ingredients, choose EXACTLY 2 that belong to the same cuisine (italian: pasta, tomatoes, basil, mozzarella; mexican: tortillas, black beans, avocado, lime; japanese: rice, nori, tofu, miso).\nRefer to each one by its index.\nFor each chosen ingredient, list 3 dishes of that cuisine built around that ingredient.",
+        "options" : {
+          "includeSchemaInPrompt" : true,
+          "maximumResponseTokens" : 512,
+          "sampling" : {
+            "mode" : "greedy"
+          }
+        },
+        "prompt" : "Available ingredients: 0=Rice, 1=Miso\n\nWhich two ingredients should I cook with tonight, with 3 dishes for each?",
+        "schema" : {
+          "$defs" : {
+            "NamedPick" : {
+              "additionalProperties" : false,
+              "properties" : {
+                "details" : {
+                  "description" : "Three suggestions for this item",
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "maxItems" : 3,
+                  "minItems" : 3,
+                  "type" : "array"
+                },
+                "index" : {
+                  "description" : "Index of the chosen item in the numbered list",
+                  "type" : "integer"
+                },
+                "name" : {
+                  "description" : "The chosen item's name, copied exactly as it appears in the list",
+                  "type" : "string"
+                }
+              },
+              "required" : [
+                "index",
+                "name",
+                "details"
+              ],
+              "title" : "NamedPick",
+              "type" : "object",
+              "x-order" : [
+                "index",
+                "name",
+                "details"
+              ]
+            }
+          },
+          "additionalProperties" : false,
+          "properties" : {
+            "label" : {
+              "description" : "Short label that describes the two chosen items",
+              "type" : "string"
+            },
+            "picks" : {
+              "description" : "Exactly 2 items from the numbered list that go together",
+              "items" : {
+                "$ref" : "#/$defs/NamedPick"
+              },
+              "maxItems" : 2,
+              "minItems" : 2,
+              "type" : "array"
+            },
+            "reason" : {
+              "description" : "One short sentence on why these two",
+              "type" : "string"
+            }
+          },
+          "required" : [
+            "picks",
+            "label",
+            "reason"
+          ],
+          "title" : "NameFirstAnswer",
+          "type" : "object",
+          "x-order" : [
+            "picks",
+            "label",
+            "reason"
+          ]
+        }
+      },
+      "response" : {
+        "json" : {
+          "label" : "Japanese staples",
+          "picks" : [
+            {
+              "details" : [
+                "Japanese rice balls",
+                "Sushi",
+                "Rice porridge"
+              ],
+              "index" : 0,
+              "name" : "Rice"
+            },
+            {
+              "details" : [
+                "Miso soup",
+                "Miso ramen",
+                "Miso tofu bowl"
+              ],
+              "index" : 1,
+              "name" : "Miso"
+            }
+          ],
+          "reason" : "Both ingredients are core components in traditional Japanese cuisine."
+        },
+        "outputTokens" : 91
+      }
+    },
+    {
+      "key" : "fd5b4760fb3c88b680db32646f6cd30d6edb7058d164c506fe6e66ab37b61a89",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_3b.fm_api_generic.draft?variant=generic_sparse_16.1000.81614.13.205144,0",
+          "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
+          "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
+        ],
+        "recordedAt" : "2026-11-23T18:36:41Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "seconds" : 4.188,
+        "systemVersion" : "Version 27.2.1 (Build 26B131)"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "instructions" : "You plan a home-cooked dinner.\nFrom the numbered list of AVAILABLE ingredients, choose EXACTLY 2 that belong to the same cuisine (italian: pasta, tomatoes, basil, mozzarella; mexican: tortillas, black beans, avocado, lime; japanese: rice, nori, tofu, miso).\nRefer to each one by its index.\nFor each chosen ingredient, list 3 dishes of that cuisine built around that ingredient.",
+        "options" : {
+          "includeSchemaInPrompt" : true,
+          "maximumResponseTokens" : 512,
+          "sampling" : {
+            "mode" : "greedy"
+          }
+        },
+        "prompt" : "Available ingredients: 0=Tortillas, 1=Avocado\n\nWhich two ingredients should I cook with tonight, with 3 dishes for each?",
+        "schema" : {
+          "$defs" : {
+            "NamedPick" : {
+              "additionalProperties" : false,
+              "properties" : {
+                "details" : {
+                  "description" : "Three suggestions for this item",
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "maxItems" : 3,
+                  "minItems" : 3,
+                  "type" : "array"
+                },
+                "index" : {
+                  "description" : "Index of the chosen item in the numbered list",
+                  "type" : "integer"
+                },
+                "name" : {
+                  "description" : "The chosen item's name, copied exactly as it appears in the list",
+                  "type" : "string"
+                }
+              },
+              "required" : [
+                "index",
+                "name",
+                "details"
+              ],
+              "title" : "NamedPick",
+              "type" : "object",
+              "x-order" : [
+                "index",
+                "name",
+                "details"
+              ]
+            }
+          },
+          "additionalProperties" : false,
+          "properties" : {
+            "label" : {
+              "description" : "Short label that describes the two chosen items",
+              "type" : "string"
+            },
+            "picks" : {
+              "description" : "Exactly 2 items from the numbered list that go together",
+              "items" : {
+                "$ref" : "#/$defs/NamedPick"
+              },
+              "maxItems" : 2,
+              "minItems" : 2,
+              "type" : "array"
+            },
+            "reason" : {
+              "description" : "One short sentence on why these two",
+              "type" : "string"
+            }
+          },
+          "required" : [
+            "picks",
+            "label",
+            "reason"
+          ],
+          "title" : "NameFirstAnswer",
+          "type" : "object",
+          "x-order" : [
+            "picks",
+            "label",
+            "reason"
+          ]
+        }
+      },
+      "response" : {
+        "json" : {
+          "label" : "Tortillas and Avocado",
+          "picks" : [
+            {
+              "details" : [
+                "Tacos",
+                "Burritos",
+                "Nachos"
+              ],
+              "index" : 0,
+              "name" : "Tortillas"
+            },
+            {
+              "details" : [
+                "Guacamole",
+                "Avocado Toast",
+                "Mexican Salad"
+              ],
+              "index" : 1,
+              "name" : "Avocado"
+            }
+          ],
+          "reason" : "Both ingredients are key components in Mexican cuisine, forming the base and flavor elements for several traditional dishes."
+        },
+        "outputTokens" : 101
+      }
+    },
+    {
+      "key" : "fd5b4760fb3c88b680db32646f6cd30d6edb7058d164c506fe6e66ab37b61a89",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_3b.fm_api_generic.draft?variant=generic_sparse_16.1000.81614.13.205144,0",
+          "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
+          "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
+        ],
+        "recordedAt" : "2026-11-23T18:36:46Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "seconds" : 4.2,
+        "systemVersion" : "Version 27.2.1 (Build 26B131)"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "instructions" : "You plan a home-cooked dinner.\nFrom the numbered list of AVAILABLE ingredients, choose EXACTLY 2 that belong to the same cuisine (italian: pasta, tomatoes, basil, mozzarella; mexican: tortillas, black beans, avocado, lime; japanese: rice, nori, tofu, miso).\nRefer to each one by its index.\nFor each chosen ingredient, list 3 dishes of that cuisine built around that ingredient.",
+        "options" : {
+          "includeSchemaInPrompt" : true,
+          "maximumResponseTokens" : 512,
+          "sampling" : {
+            "mode" : "greedy"
+          }
+        },
+        "prompt" : "Available ingredients: 0=Tortillas, 1=Avocado\n\nWhich two ingredients should I cook with tonight, with 3 dishes for each?",
+        "schema" : {
+          "$defs" : {
+            "NamedPick" : {
+              "additionalProperties" : false,
+              "properties" : {
+                "details" : {
+                  "description" : "Three suggestions for this item",
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "maxItems" : 3,
+                  "minItems" : 3,
+                  "type" : "array"
+                },
+                "index" : {
+                  "description" : "Index of the chosen item in the numbered list",
+                  "type" : "integer"
+                },
+                "name" : {
+                  "description" : "The chosen item's name, copied exactly as it appears in the list",
+                  "type" : "string"
+                }
+              },
+              "required" : [
+                "index",
+                "name",
+                "details"
+              ],
+              "title" : "NamedPick",
+              "type" : "object",
+              "x-order" : [
+                "index",
+                "name",
+                "details"
+              ]
+            }
+          },
+          "additionalProperties" : false,
+          "properties" : {
+            "label" : {
+              "description" : "Short label that describes the two chosen items",
+              "type" : "string"
+            },
+            "picks" : {
+              "description" : "Exactly 2 items from the numbered list that go together",
+              "items" : {
+                "$ref" : "#/$defs/NamedPick"
+              },
+              "maxItems" : 2,
+              "minItems" : 2,
+              "type" : "array"
+            },
+            "reason" : {
+              "description" : "One short sentence on why these two",
+              "type" : "string"
+            }
+          },
+          "required" : [
+            "picks",
+            "label",
+            "reason"
+          ],
+          "title" : "NameFirstAnswer",
+          "type" : "object",
+          "x-order" : [
+            "picks",
+            "label",
+            "reason"
+          ]
+        }
+      },
+      "response" : {
+        "json" : {
+          "label" : "Tortillas and Avocado",
+          "picks" : [
+            {
+              "details" : [
+                "Tacos",
+                "Burritos",
+                "Nachos"
+              ],
+              "index" : 0,
+              "name" : "Tortillas"
+            },
+            {
+              "details" : [
+                "Guacamole",
+                "Avocado Toast",
+                "Mexican Salad"
+              ],
+              "index" : 1,
+              "name" : "Avocado"
+            }
+          ],
+          "reason" : "Both ingredients are key components in Mexican cuisine, forming the base and flavor elements for several traditional dishes."
+        },
+        "outputTokens" : 101
+      }
+    },
+    {
+      "key" : "3ab63417a48002e42d62cf4016a78ce1cdb71e4d84be3a328cebcafb07d1f9b9",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_3b.fm_api_generic.draft?variant=generic_sparse_16.1000.81614.13.205144,0",
+          "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
+          "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
+        ],
+        "recordedAt" : "2026-11-23T18:36:51Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "seconds" : 4.999,
+        "systemVersion" : "Version 27.2.1 (Build 26B131)"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "instructions" : "You plan a home-cooked dinner.\nFrom the numbered list of AVAILABLE ingredients, choose EXACTLY 2 that belong to the same cuisine (italian: pasta, tomatoes, basil, mozzarella; mexican: tortillas, black beans, avocado, lime; japanese: rice, nori, tofu, miso).\nRefer to each one by its index.\nFor each chosen ingredient, list 3 dishes of that cuisine built around that ingredient.",
+        "options" : {
+          "includeSchemaInPrompt" : true,
+          "maximumResponseTokens" : 512,
+          "sampling" : {
+            "mode" : "greedy"
+          }
+        },
+        "prompt" : "Available ingredients: 0=Tofu, 1=Miso\n\nWhich two ingredients should I cook with tonight, with 3 dishes for each?",
+        "schema" : {
+          "$defs" : {
+            "NamedPick" : {
+              "additionalProperties" : false,
+              "properties" : {
+                "details" : {
+                  "description" : "Three suggestions for this item",
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "maxItems" : 3,
+                  "minItems" : 3,
+                  "type" : "array"
+                },
+                "index" : {
+                  "description" : "Index of the chosen item in the numbered list",
+                  "type" : "integer"
+                },
+                "name" : {
+                  "description" : "The chosen item's name, copied exactly as it appears in the list",
+                  "type" : "string"
+                }
+              },
+              "required" : [
+                "index",
+                "name",
+                "details"
+              ],
+              "title" : "NamedPick",
+              "type" : "object",
+              "x-order" : [
+                "index",
+                "name",
+                "details"
+              ]
+            }
+          },
+          "additionalProperties" : false,
+          "properties" : {
+            "label" : {
+              "description" : "Short label that describes the two chosen items",
+              "type" : "string"
+            },
+            "picks" : {
+              "description" : "Exactly 2 items from the numbered list that go together",
+              "items" : {
+                "$ref" : "#/$defs/NamedPick"
+              },
+              "maxItems" : 2,
+              "minItems" : 2,
+              "type" : "array"
+            },
+            "reason" : {
+              "description" : "One short sentence on why these two",
+              "type" : "string"
+            }
+          },
+          "required" : [
+            "picks",
+            "label",
+            "reason"
+          ],
+          "title" : "NameFirstAnswer",
+          "type" : "object",
+          "x-order" : [
+            "picks",
+            "label",
+            "reason"
+          ]
+        }
+      },
+      "response" : {
+        "json" : {
+          "label" : "Japanese Ingredients",
+          "picks" : [
+            {
+              "details" : [
+                "Tofu Stir-fry",
+                "Tofu and Vegetable Skewers",
+                "Crispy Tofu Bowl"
+              ],
+              "index" : 0,
+              "name" : "Tofu"
+            },
+            {
+              "details" : [
+                "Miso Soup",
+                "Miso-Glazed Salmon",
+                "Miso Noodles"
+              ],
+              "index" : 1,
+              "name" : "Miso"
+            }
+          ],
+          "reason" : "Both tofu and miso are core components of Japanese cuisine, forming the foundation for several traditional dishes."
+        },
+        "outputTokens" : 117
+      }
+    },
+    {
+      "key" : "1c3c60e1003d8126ce00e1152c14ed0b5bb9d8d256c34773741b4ef2e4c42570",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_3b.fm_api_generic.draft?variant=generic_sparse_16.1000.81614.13.205144,0",
+          "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
+          "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
+        ],
+        "recordedAt" : "2026-11-23T18:36:55Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "seconds" : 4.011,
+        "systemVersion" : "Version 27.2.1 (Build 26B131)"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "instructions" : "You plan a home-cooked dinner.\nFrom the numbered list of AVAILABLE ingredients, choose EXACTLY 2 that belong to the same cuisine (italian: pasta, tomatoes, basil, mozzarella; mexican: tortillas, black beans, avocado, lime; japanese: rice, nori, tofu, miso).\nRefer to each one by its index.\nFor each chosen ingredient, list 3 dishes of that cuisine built around that ingredient.",
+        "options" : {
+          "includeSchemaInPrompt" : true,
+          "maximumResponseTokens" : 512,
+          "sampling" : {
+            "mode" : "greedy"
+          }
+        },
+        "prompt" : "Available ingredients: 0=Rice, 1=Nori\n\nWhich two ingredients should I cook with tonight, with 3 dishes for each?",
+        "schema" : {
+          "$defs" : {
+            "NamedPick" : {
+              "additionalProperties" : false,
+              "properties" : {
+                "details" : {
+                  "description" : "Three suggestions for this item",
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "maxItems" : 3,
+                  "minItems" : 3,
+                  "type" : "array"
+                },
+                "index" : {
+                  "description" : "Index of the chosen item in the numbered list",
+                  "type" : "integer"
+                },
+                "name" : {
+                  "description" : "The chosen item's name, copied exactly as it appears in the list",
+                  "type" : "string"
+                }
+              },
+              "required" : [
+                "index",
+                "name",
+                "details"
+              ],
+              "title" : "NamedPick",
+              "type" : "object",
+              "x-order" : [
+                "index",
+                "name",
+                "details"
+              ]
+            }
+          },
+          "additionalProperties" : false,
+          "properties" : {
+            "label" : {
+              "description" : "Short label that describes the two chosen items",
+              "type" : "string"
+            },
+            "picks" : {
+              "description" : "Exactly 2 items from the numbered list that go together",
+              "items" : {
+                "$ref" : "#/$defs/NamedPick"
+              },
+              "maxItems" : 2,
+              "minItems" : 2,
+              "type" : "array"
+            },
+            "reason" : {
+              "description" : "One short sentence on why these two",
+              "type" : "string"
+            }
+          },
+          "required" : [
+            "picks",
+            "label",
+            "reason"
+          ],
+          "title" : "NameFirstAnswer",
+          "type" : "object",
+          "x-order" : [
+            "picks",
+            "label",
+            "reason"
+          ]
+        }
+      },
+      "response" : {
+        "json" : {
+          "label" : "Japanese cuisine",
+          "picks" : [
+            {
+              "details" : [
+                "Japanese rice balls",
+                "Sushi",
+                "Rice porridge"
+              ],
+              "index" : 0,
+              "name" : "Rice"
+            },
+            {
+              "details" : [
+                "Nori rolls",
+                "Nori popcorn",
+                "Nori chips"
+              ],
+              "index" : 1,
+              "name" : "Nori"
+            }
+          ],
+          "reason" : "Both ingredients are staples in Japanese cooking, forming the foundation for traditional and modern dishes."
+        },
+        "outputTokens" : 93
+      }
+    }
+  ],
+  "machine" : "Mac16,12",
+  "version" : 1
+}

@@ -1,0 +1,133 @@
+{
+  "assay" : "0.2.0-dev",
+  "interactions" : [
+    {
+      "key" : "a32fa71390157e618a24b45e0c180f38756a4b31029abc473a8a85b140098eae",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_server_v2.base_zap.generic_11.3.0",
+          "com.apple.fm.language.instruct_server_v2.fm_api.generic_11.170003.18"
+        ],
+        "recordedAt" : "2026-11-23T18:40:05Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "seconds" : 1.184,
+        "systemVersion" : "6B85"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "instructions" : "You plan a gym session.\nFrom the numbered list of AVAILABLE muscle groups, choose EXACTLY 2 that belong to the same kind of training day (push: chest, shoulders, triceps; pull: back, biceps, forearms; legs: legs, glutes, calves, abs, core).\nRefer to each one by its index.\nFor each chosen group, list 3 exercises that train that group and no other.",
+        "options" : {
+          "includeSchemaInPrompt" : true,
+          "maximumResponseTokens" : 512,
+          "sampling" : {
+            "mode" : "greedy"
+          }
+        },
+        "prompt" : "Available muscle groups: 0=Legs, 1=Abs\n\nWhich two groups should I train today, with 3 exercises for each?",
+        "schema" : {
+          "$defs" : {
+            "NamedPick" : {
+              "additionalProperties" : false,
+              "properties" : {
+                "details" : {
+                  "description" : "Three suggestions for this item",
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "maxItems" : 3,
+                  "minItems" : 3,
+                  "type" : "array"
+                },
+                "index" : {
+                  "description" : "Index of the chosen item in the numbered list",
+                  "type" : "integer"
+                },
+                "name" : {
+                  "description" : "The chosen item's name, copied exactly as it appears in the list",
+                  "type" : "string"
+                }
+              },
+              "required" : [
+                "index",
+                "name",
+                "details"
+              ],
+              "title" : "NamedPick",
+              "type" : "object",
+              "x-order" : [
+                "index",
+                "name",
+                "details"
+              ]
+            }
+          },
+          "additionalProperties" : false,
+          "properties" : {
+            "label" : {
+              "description" : "Short label that describes the two chosen items",
+              "type" : "string"
+            },
+            "picks" : {
+              "description" : "Exactly 2 items from the numbered list that go together",
+              "items" : {
+                "$ref" : "#/$defs/NamedPick"
+              },
+              "maxItems" : 2,
+              "minItems" : 2,
+              "type" : "array"
+            },
+            "reason" : {
+              "description" : "One short sentence on why these two",
+              "type" : "string"
+            }
+          },
+          "required" : [
+            "picks",
+            "label",
+            "reason"
+          ],
+          "title" : "NameFirstAnswer",
+          "type" : "object",
+          "x-order" : [
+            "picks",
+            "label",
+            "reason"
+          ]
+        }
+      },
+      "response" : {
+        "json" : {
+          "label" : "Legs day",
+          "picks" : [
+            {
+              "details" : [
+                "Barbell back squat",
+                "Leg press",
+                "Bulgarian split squat"
+              ],
+              "index" : 0,
+              "name" : "Legs"
+            },
+            {
+              "details" : [
+                "Hanging leg raise",
+                "Ab wheel rollout",
+                "Lying leg raise"
+              ],
+              "index" : 1,
+              "name" : "Abs"
+            }
+          ],
+          "reason" : "Both belong to the legs training day category."
+        },
+        "outputTokens" : 91
+      }
+    }
+  ],
+  "machine" : "Mac16,12",
+  "version" : 1
+}

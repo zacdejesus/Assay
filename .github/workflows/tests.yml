@@ -35,6 +35,9 @@ jobs:
       - name: Example app tests
         run: scripts/test.sh example
 
+      - name: PickTwo from tapes
+        run: scripts/test.sh picktwo
+
       # The app target itself: proves the hand-written Xcode project still builds.
       - name: Build the example app
         run: >

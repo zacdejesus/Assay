@@ -1,0 +1,134 @@
+{
+  "assay" : "0.2.0-dev",
+  "interactions" : [
+    {
+      "key" : "3ab63417a48002e42d62cf4016a78ce1cdb71e4d84be3a328cebcafb07d1f9b9",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_3b.fm_api_generic.draft?variant=generic_sparse_16.1000.81614.13.205144,0",
+          "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
+          "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
+        ],
+        "recordedAt" : "2026-11-23T18:36:48Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "seconds" : 4.556,
+        "systemVersion" : "Version 27.2.1 (Build 26B131)"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "instructions" : "You plan a home-cooked dinner.\nFrom the numbered list of AVAILABLE ingredients, choose EXACTLY 2 that belong to the same cuisine (italian: pasta, tomatoes, basil, mozzarella; mexican: tortillas, black beans, avocado, lime; japanese: rice, nori, tofu, miso).\nRefer to each one by its index.\nFor each chosen ingredient, list 3 dishes of that cuisine built around that ingredient.",
+        "options" : {
+          "includeSchemaInPrompt" : true,
+          "maximumResponseTokens" : 512,
+          "sampling" : {
+            "mode" : "greedy"
+          }
+        },
+        "prompt" : "Available ingredients: 0=Tofu, 1=Miso\n\nWhich two ingredients should I cook with tonight, with 3 dishes for each?",
+        "schema" : {
+          "$defs" : {
+            "NamedPick" : {
+              "additionalProperties" : false,
+              "properties" : {
+                "details" : {
+                  "description" : "Three suggestions for this item",
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "maxItems" : 3,
+                  "minItems" : 3,
+                  "type" : "array"
+                },
+                "index" : {
+                  "description" : "Index of the chosen item in the numbered list",
+                  "type" : "integer"
+                },
+                "name" : {
+                  "description" : "The chosen item's name, copied exactly as it appears in the list",
+                  "type" : "string"
+                }
+              },
+              "required" : [
+                "index",
+                "name",
+                "details"
+              ],
+              "title" : "NamedPick",
+              "type" : "object",
+              "x-order" : [
+                "index",
+                "name",
+                "details"
+              ]
+            }
+          },
+          "additionalProperties" : false,
+          "properties" : {
+            "label" : {
+              "description" : "Short label that describes the two chosen items",
+              "type" : "string"
+            },
+            "picks" : {
+              "description" : "Exactly 2 items from the numbered list that go together",
+              "items" : {
+                "$ref" : "#/$defs/NamedPick"
+              },
+              "maxItems" : 2,
+              "minItems" : 2,
+              "type" : "array"
+            },
+            "reason" : {
+              "description" : "One short sentence on why these two",
+              "type" : "string"
+            }
+          },
+          "required" : [
+            "picks",
+            "label",
+            "reason"
+          ],
+          "title" : "NameFirstAnswer",
+          "type" : "object",
+          "x-order" : [
+            "picks",
+            "label",
+            "reason"
+          ]
+        }
+      },
+      "response" : {
+        "json" : {
+          "label" : "Japanese Ingredients",
+          "picks" : [
+            {
+              "details" : [
+                "Tofu Stir-fry",
+                "Tofu and Vegetable Skewers",
+                "Crispy Tofu Bowl"
+              ],
+              "index" : 0,
+              "name" : "Tofu"
+            },
+            {
+              "details" : [
+                "Miso Soup",
+                "Miso-Glazed Salmon",
+                "Miso Noodles"
+              ],
+              "index" : 1,
+              "name" : "Miso"
+            }
+          ],
+          "reason" : "Both tofu and miso are core components of Japanese cuisine, forming the foundation for several traditional dishes."
+        },
+        "outputTokens" : 117
+      }
+    }
+  ],
+  "machine" : "Mac16,12",
+  "version" : 1
+}

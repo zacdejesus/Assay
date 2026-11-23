@@ -1,0 +1,133 @@
+{
+  "assay" : "0.2.0-dev",
+  "interactions" : [
+    {
+      "key" : "bda38187a62ea6fd228e7658ddb4a2c6582c30e33d39a04b3e1e15e8dfd3c5c3",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_server_v2.base_zap.generic_11.3.0",
+          "com.apple.fm.language.instruct_server_v2.fm_api.generic_11.170003.18"
+        ],
+        "recordedAt" : "2026-11-23T18:40:04Z",
+        "sampling" : {
+          "mode" : "greedy"
+        },
+        "seconds" : 1.443,
+        "systemVersion" : "6B85"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "instructions" : "You plan a gym session.\nFrom the numbered list of AVAILABLE muscle groups, choose EXACTLY 2 that belong to the same kind of training day (push: chest, shoulders, triceps; pull: back, biceps, forearms; legs: legs, glutes, calves, abs, core).\nRefer to each one by its index.\nFor each chosen group, list 3 exercises that train that group and no other.",
+        "options" : {
+          "includeSchemaInPrompt" : true,
+          "maximumResponseTokens" : 512,
+          "sampling" : {
+            "mode" : "greedy"
+          }
+        },
+        "prompt" : "Available muscle groups: 0=Chest, 1=Shoulders, 2=Triceps\n\nWhich two groups should I train today, with 3 exercises for each?",
+        "schema" : {
+          "$defs" : {
+            "NamedPick" : {
+              "additionalProperties" : false,
+              "properties" : {
+                "details" : {
+                  "description" : "Three suggestions for this item",
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "maxItems" : 3,
+                  "minItems" : 3,
+                  "type" : "array"
+                },
+                "index" : {
+                  "description" : "Index of the chosen item in the numbered list",
+                  "type" : "integer"
+                },
+                "name" : {
+                  "description" : "The chosen item's name, copied exactly as it appears in the list",
+                  "type" : "string"
+                }
+              },
+              "required" : [
+                "index",
+                "name",
+                "details"
+              ],
+              "title" : "NamedPick",
+              "type" : "object",
+              "x-order" : [
+                "index",
+                "name",
+                "details"
+              ]
+            }
+          },
+          "additionalProperties" : false,
+          "properties" : {
+            "label" : {
+              "description" : "Short label that describes the two chosen items",
+              "type" : "string"
+            },
+            "picks" : {
+              "description" : "Exactly 2 items from the numbered list that go together",
+              "items" : {
+                "$ref" : "#/$defs/NamedPick"
+              },
+              "maxItems" : 2,
+              "minItems" : 2,
+              "type" : "array"
+            },
+            "reason" : {
+              "description" : "One short sentence on why these two",
+              "type" : "string"
+            }
+          },
+          "required" : [
+            "picks",
+            "label",
+            "reason"
+          ],
+          "title" : "NameFirstAnswer",
+          "type" : "object",
+          "x-order" : [
+            "picks",
+            "label",
+            "reason"
+          ]
+        }
+      },
+      "response" : {
+        "json" : {
+          "label" : "Push day",
+          "picks" : [
+            {
+              "details" : [
+                "Barbell bench press",
+                "Dumbbell flat press",
+                "Chest press machine"
+              ],
+              "index" : 0,
+              "name" : "Chest"
+            },
+            {
+              "details" : [
+                "Triceps pushdown",
+                "Overhead dumbbell extension",
+                "Close-grip bench press"
+              ],
+              "index" : 2,
+              "name" : "Triceps"
+            }
+          ],
+          "reason" : "Chest and triceps are both part of push training."
+        },
+        "outputTokens" : 101
+      }
+    }
+  ],
+  "machine" : "Mac16,12",
+  "version" : 1
+}

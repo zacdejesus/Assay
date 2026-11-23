@@ -3,6 +3,7 @@
 #
 #   scripts/test.sh                 unit tests only: fast, no model needed
 #   scripts/test.sh example         the example app's tests (Examples/TokenSpeed): fast, no model needed
+#   scripts/test.sh picktwo         Examples/PickTwo from its tapes: fast, no model needed
 #   scripts/test.sh live            everything, including the tests that call the real model
 #   scripts/test.sh greedy          Experiment C: is greedy (and seeded) sampling repeatable?
 #   scripts/test.sh canary          has the on-device model changed since the last check?
@@ -26,6 +27,9 @@ case "${1:-unit}" in
     ;;
   example)
     swift test --package-path Examples/TokenSpeed/TokenSpeedCore
+    ;;
+  picktwo)
+    swift test --package-path Examples/PickTwo
     ;;
   live)
     ASSAY_LIVE=1 swift test
@@ -77,7 +81,7 @@ case "${1:-unit}" in
     echo "failed, and add the new versions to docs/notes/environment.md."
     ;;
   *)
-    sed -n '2,19p' "$0"
+    sed -n '2,20p' "$0"
     exit 2
     ;;
 esac

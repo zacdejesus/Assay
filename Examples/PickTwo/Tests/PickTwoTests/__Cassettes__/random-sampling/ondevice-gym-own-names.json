@@ -1,0 +1,137 @@
+{
+  "assay" : "0.2.0-dev",
+  "interactions" : [
+    {
+      "key" : "c859055e397aa323b84a8699a66554bd585805723cb0ff15a9994b8710838010",
+      "provenance" : {
+        "assetIDs" : [
+          "com.apple.fm.language.instruct_3b.fm_api_generic.draft?variant=generic_sparse_16.1000.81614.13.205144,0",
+          "com.apple.fm.language.instruct_3b.fm_api_generic_3b?variant=generic_sparse_16.1000.0.13.103404,0",
+          "com.apple.fm.language.instruct_3b.tokenizer?variant=generic_sparse_16.1000.0.13.205140,0"
+        ],
+        "recordedAt" : "2026-11-23T18:37:09Z",
+        "sampling" : {
+          "mode" : "probabilityThreshold",
+          "probabilityThreshold" : 0.9
+        },
+        "seconds" : 2.32,
+        "systemVersion" : "Version 27.2.1 (Build 26B131)"
+      },
+      "request" : {
+        "history" : [
+
+        ],
+        "instructions" : "You plan a gym session.\nFrom the numbered list of AVAILABLE muscle groups, choose EXACTLY 2 that belong to the same kind of training day (push: chest, shoulders, triceps; pull: back, biceps, forearms; legs: legs, glutes, calves, abs, core).\nRefer to each one by its index.\nFor each chosen group, list 3 exercises that train that group and no other.",
+        "options" : {
+          "includeSchemaInPrompt" : true,
+          "maximumResponseTokens" : 512,
+          "sampling" : {
+            "mode" : "probabilityThreshold",
+            "probabilityThreshold" : 0.9
+          },
+          "temperature" : 0.7
+        },
+        "prompt" : "Available muscle groups: 0=Legs, 1=Core\n\nWhich two groups should I train today, with 3 exercises for each?",
+        "schema" : {
+          "$defs" : {
+            "NamedPick" : {
+              "additionalProperties" : false,
+              "properties" : {
+                "details" : {
+                  "description" : "Three suggestions for this item",
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "maxItems" : 3,
+                  "minItems" : 3,
+                  "type" : "array"
+                },
+                "index" : {
+                  "description" : "Index of the chosen item in the numbered list",
+                  "type" : "integer"
+                },
+                "name" : {
+                  "description" : "The chosen item's name, copied exactly as it appears in the list",
+                  "type" : "string"
+                }
+              },
+              "required" : [
+                "index",
+                "name",
+                "details"
+              ],
+              "title" : "NamedPick",
+              "type" : "object",
+              "x-order" : [
+                "index",
+                "name",
+                "details"
+              ]
+            }
+          },
+          "additionalProperties" : false,
+          "properties" : {
+            "label" : {
+              "description" : "Short label that describes the two chosen items",
+              "type" : "string"
+            },
+            "picks" : {
+              "description" : "Exactly 2 items from the numbered list that go together",
+              "items" : {
+                "$ref" : "#/$defs/NamedPick"
+              },
+              "maxItems" : 2,
+              "minItems" : 2,
+              "type" : "array"
+            },
+            "reason" : {
+              "description" : "One short sentence on why these two",
+              "type" : "string"
+            }
+          },
+          "required" : [
+            "picks",
+            "label",
+            "reason"
+          ],
+          "title" : "NameFirstAnswer",
+          "type" : "object",
+          "x-order" : [
+            "picks",
+            "label",
+            "reason"
+          ]
+        }
+      },
+      "response" : {
+        "json" : {
+          "label" : "Legs and Core",
+          "picks" : [
+            {
+              "details" : [
+                "Leg Press",
+                "Squats",
+                "Lunges"
+              ],
+              "index" : 0,
+              "name" : "Legs"
+            },
+            {
+              "details" : [
+                "Planks",
+                "Crunches",
+                "Leg Raises"
+              ],
+              "index" : 1,
+              "name" : "Core"
+            }
+          ],
+          "reason" : "Both are lower body focused, with Legs emphasizing strength and Core supporting stabilization."
+        },
+        "outputTokens" : 99
+      }
+    }
+  ],
+  "machine" : "Mac16,12",
+  "version" : 1
+}

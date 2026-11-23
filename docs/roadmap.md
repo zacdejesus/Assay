@@ -219,8 +219,8 @@ useful instead of competing with it.
 **Build**
 - [x] A cassette-backed model used as the subject of an Apple `Evaluation`.
 - [x] **Judge calls recorded too**, so judged evals replay offline.
-- [ ] Example: the example app's evaluation running in `swift test` / `xcodebuild test`
-      with no live model.
+- [x] Example: an example's evaluation running in `swift test` with no live model
+      ([Examples/PickTwo](../Examples/PickTwo)).
 - [x] A guide: "run Apple Evaluations in GitHub Actions with Assay".
 
 **Decide**
