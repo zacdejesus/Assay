@@ -85,7 +85,8 @@ samples, 2 with the name copied). It made no difference to which items were pick
 **4. A drift report on randomly sampled tapes is noise.** With the same model, minutes apart,
 the 24 greedy requests came back unchanged and the 12 randomly sampled ones all changed. That's
 why the tests record with greedy sampling, and why `random-sampling/` exists: to show the
-difference.
+difference. The report now lists those 12 apart, as "changed, randomly sampled", and
+`--fail-on-change` ignores them.
 
 ## Recording Private Cloud Compute
 

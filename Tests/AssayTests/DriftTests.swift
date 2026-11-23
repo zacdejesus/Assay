@@ -18,14 +18,14 @@ struct DriftTests {
         }
 
         /// Records `answers` for `prompts`, in order, into a tape of its own directory.
-        func record(_ generation: String, prompts: [String], answers: [String]) async throws -> URL {
+        func record(_ generation: String, prompts: [String], answers: [String], options: GenerationOptions = GenerationOptions()) async throws -> URL {
             let cassette = try Cassette(
                 "tape", mode: .record, recording: FakeModel(answers.map { .text($0) }),
                 directory: directory.appendingPathComponent(generation),
                 normalize: nil, redact: nil, filePath: #filePath, environment: [:]
             )
             for prompt in prompts {
-                _ = try await LanguageModelSession(model: cassette.model).respond(to: prompt)
+                _ = try await LanguageModelSession(model: cassette.model).respond(to: prompt, options: options)
             }
             return cassette.url
         }
@@ -52,6 +52,48 @@ struct DriftTests {
         #expect(report.count(.flippedToFail) == 1)
         #expect(report.cases[2].before == "Madrid.")
         #expect(report.cases[2].after == "Barcelona.")
+    }
+
+    static let randomly = GenerationOptions(samplingMode: .random(probabilityThreshold: 0.9), temperature: 0.7)
+
+    @Test("A changed answer to a randomly sampled request is sampled, not changed")
+    func randomlySampled() async throws {
+        let scratch = Scratch()
+        let old = try await scratch.record("old", prompts: ["Capital of France?", "Capital of Peru?"], answers: ["Paris.", "Lima."], options: Self.randomly)
+        let new = try await scratch.record("new", prompts: ["Capital of France?", "Capital of Peru?"], answers: ["Paris.", "It's Lima."], options: Self.randomly)
+
+        let report = try Drift.compare(baseline: old, candidate: new)
+        #expect(report.cases.map(\.kind) == [.unchanged, .sampled])
+        #expect(report.changeCount == 0)
+        #expect(report.randomlySampledCount == 2)
+        #expect(report.markdown().contains("2 of 2 cases were recorded with random sampling"))
+        #expect(report.markdown().contains("## Changed, randomly sampled (1)"))
+    }
+
+    @Test("With a pass criterion, a randomly sampled flip is still a flip")
+    func randomlySampledFlip() async throws {
+        let scratch = Scratch()
+        let old = try await scratch.record("old", prompts: ["Capital of Spain?", "Capital of Italy?"], answers: ["Madrid.", "Rome."], options: Self.randomly)
+        let new = try await scratch.record("new", prompts: ["Capital of Spain?", "Capital of Italy?"], answers: ["Barcelona.", "It's Rome."], options: Self.randomly)
+        let report = try Drift.compare(baseline: old, candidate: new, passes: Self.namesTheCapital)
+        #expect(report.cases.map(\.kind) == [.flippedToFail, .sampled])
+        #expect(report.changeCount == 1)
+    }
+
+    @Test("A seed or greedy sampling makes a request comparable")
+    func seededOrGreedy() async throws {
+        let scratch = Scratch()
+        let seeded = GenerationOptions(samplingMode: .random(probabilityThreshold: 0.9, seed: 7))
+        let oldSeeded = try await scratch.record("old-seeded", prompts: ["a"], answers: ["1"], options: seeded)
+        let newSeeded = try await scratch.record("new-seeded", prompts: ["a"], answers: ["2"], options: seeded)
+        #expect(try Drift.compare(baseline: oldSeeded, candidate: newSeeded).cases.map(\.kind) == [.changed])
+
+        let oldGreedy = try await scratch.record("old-greedy", prompts: ["a"], answers: ["1"], options: GenerationOptions(samplingMode: .greedy))
+        let newGreedy = try await scratch.record("new-greedy", prompts: ["a"], answers: ["2"], options: GenerationOptions(samplingMode: .greedy))
+        let report = try Drift.compare(baseline: oldGreedy, candidate: newGreedy)
+        #expect(report.cases.map(\.kind) == [.changed])
+        #expect(report.changeCount == 1)
+        #expect(!report.markdown().contains("Random sampling"))
     }
 
     @Test("An answer that failed before and still fails is its own kind")

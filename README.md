@@ -159,11 +159,17 @@ let report = try await Drift.check(tape: cassette.url) { request, answer in
 ```
 
 The report shows the before and after of every case that isn't unchanged, and says whether
-the model assets actually differ. `--update` keeps the new answers and moves the old tape to
+the model assets actually differ. Requests recorded with random sampling and no seed are listed
+apart ("changed, randomly sampled") and don't count as changes: the same model answers them
+differently every time. `--update` keeps the new answers and moves the old tape to
 `generations/`. Design notes: [docs/decisions/0006-drift.md](docs/decisions/0006-drift.md).
 
-So far it has only been run against the same model that recorded the tapes (9 of 9
-unchanged). It hasn't seen a real model change yet.
+**It hasn't seen a real model change yet.** It has run against the same model that recorded the
+tapes: macOS 27.2 → 27.2.1 kept the on-device model (9 of 9 unchanged). The first change will
+probably come from **Private Cloud Compute**: its model lives on Apple's servers and can change
+with no update on your Mac, and its tapes record its own version. Checking it means running drift
+inside a signed app ([Examples/PickTwo](Examples/PickTwo) records PCC that way); the `assay`
+command asks the on-device model only.
 
 ## Examples
 
@@ -183,9 +189,9 @@ the first category its instructions list, whatever the user's history, and what 
 |---|---|---|
 | M0 | Spike: can I plug into Apple's protocol at all? | ✅ done |
 | M1 | `FakeModel` and availability simulation (v0.1) | ✅ done |
-| M2 | Cassette: record once, replay with provenance (v0.2) | in progress: text and structured output work |
-| M3 | Bridge to Apple's `Evaluations`, offline (v0.3) | in progress: an evaluation with a judge runs from tapes |
-| M4 | Drift report (v0.4) | in progress: works, not yet run across a real model change |
+| M2 | Cassette: record once, replay with provenance (v0.2) | ✅ done: text and structured output, on-device and Private Cloud Compute |
+| M3 | Bridge to Apple's `Evaluations`, offline (v0.3) | ✅ done: an evaluation with a judge runs from tapes in CI |
+| M4 | Drift report (v0.4) | in progress: works, waiting for a real model change (on-device or PCC) |
 | M5 | Neutral comparison: on-device, Private Cloud Compute, cloud models (v0.5) | |
 
 Details, risks and "done when" for each: [docs/roadmap.md](docs/roadmap.md).

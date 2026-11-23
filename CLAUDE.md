@@ -47,7 +47,15 @@ non-deterministic systems — by building it myself. Understanding beats shippin
 ## Status
 M0 (spike) is closed: findings in `docs/notes/foundationmodels.md`, experiments kept as
 characterization tests in `Tests/`. M1 is done: `FakeModel`, `AvailabilityScript` and the
-example app in `Examples/TokenSpeed`. M2 and M3 are in progress:
-`Cassette` records and replays text and structured output (decision 0005), and Apple's
-`Evaluations` runs from tapes (`docs/guides/evaluations-in-ci.md`). M4 has a first drift
-report (decision 0006, proposed), not yet run across a real model change.
+example app in `Examples/TokenSpeed`. M2 is done: `Cassette` records and replays text and
+structured output (decision 0005), from the on-device model and from Private Cloud Compute
+(PCC needs a signed app to record: `docs/guides/recording-private-cloud-compute.md`). M3 is
+done: Apple's `Evaluations` runs from tapes in CI (`docs/guides/evaluations-in-ci.md`).
+`Examples/PickTwo` exercises all of it.
+
+M4 (drift, decision 0006, accepted) works and is waiting for a real model change, its "done
+when". macOS 27.2 → 27.2.1 kept the on-device model. The first change will probably come from
+PCC, whose model can change on Apple's servers with no OS update: checking it means running
+`Drift.check(tape:on: PrivateCloudComputeLanguageModel())` inside a signed app.
+`Examples/PickTwo/RecorderHost` records PCC but has no drift mode yet, and the `assay` command
+only asks the on-device model. After every OS update: `scripts/test.sh after-update`.

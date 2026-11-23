@@ -37,10 +37,15 @@ All notable changes to Assay are documented here. The format is loosely based on
 - `Examples/PickTwo`: a pick-two-items feature in two domains (gym, meals), tested from tapes
   (on-device and Private Cloud Compute), as an Apple `Evaluation`, with drift and a live
   experiment; `RecorderHost`, a signed Mac app that records the PCC tapes.
+- Drift: a different answer to a request recorded with random sampling and no seed is
+  "changed, randomly sampled" instead of "changed", is listed last, and doesn't make
+  `--fail-on-change` fail. With a pass criterion, flips stay flips. The report says how many
+  cases were randomly sampled.
 
 ### Changed
 - README rewritten to match roadmap v2.
 - Experiment A: an empty response throws `LanguageModelError.unsupportedTranscriptContent`
   since macOS 27.2 (was `GeneratedContent.ParsingError`).
 
-_M1 is complete. M2 (cassettes), M3 (Evaluations) and M4 (drift) are in progress._
+_M1, M2 (cassettes) and M3 (Evaluations) are complete. M4 (drift) works and waits for a real
+model change._

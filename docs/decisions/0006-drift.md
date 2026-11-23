@@ -51,6 +51,26 @@ and the before and after of every case that isn't unchanged, failures first.
 **The gate.** In a test: `#expect(report.count(.flippedToFail) == 0)`. From the command line,
 where there is no pass criterion: `--fail-on-change`.
 
+## Revision: randomly sampled requests (2026-11-23)
+
+Real features ship with random sampling, so their tapes do too, and a drift report over them
+was all noise: with the same model, minutes apart, 12 of 12 randomly sampled requests in
+`Examples/PickTwo` came back "changed" while 24 of 24 greedy ones were unchanged. The tape
+stores the sampling mode, so the report can tell them apart.
+
+- A request recorded with random sampling **and no seed** whose answer differs, and that still
+  passes (or has no pass criterion), is `sampled` ("changed, randomly sampled"), not `changed`.
+  A seed makes it comparable again (Experiment C: seeded sampling is repeatable), and no
+  sampling mode means greedy.
+- Flips stay flips. With a pass criterion, a randomly sampled answer that now fails is shown as
+  flipped to fail: the outcome matters even when sampling may have caused it. Ask again before
+  concluding.
+- `sampled` cases are listed last and don't count for `--fail-on-change` (`changeCount`). The
+  report says how many cases were randomly sampled.
+
+To compare models, record with greedy sampling or a seed. A test can keep the app's options
+for its own assertions and record a second, greedy tape for drift, as `Examples/PickTwo` does.
+
 ## Not in this version
 
 - The command line has no pass criterion, so it can't say "flipped to fail"; that needs the

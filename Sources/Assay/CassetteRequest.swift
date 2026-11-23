@@ -31,6 +31,14 @@ extension Cassette {
             public var temperature: Double?
             public var maximumResponseTokens: Int?
             public var includeSchemaInPrompt: Bool?
+
+            /// Whether asking again can give another answer from the same model: random
+            /// sampling without a seed. No sampling mode means greedy (the cassette records
+            /// with greedy), and a seed makes random sampling repeatable (Experiment C).
+            public var isRandomlySampled: Bool {
+                guard let sampling else { return false }
+                return sampling.mode != Sampling.greedy.mode && sampling.seed == nil
+            }
         }
 
         public struct Sampling: Codable, Sendable, Equatable {

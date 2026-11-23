@@ -96,6 +96,10 @@ public struct DriftReport: Sendable {
         case flippedToPass
         /// It failed before and fails now, whether or not the answer changed.
         case stillFailing
+        /// A different answer to a request recorded with random sampling and no seed, which
+        /// still passes or has no pass criterion. The same model can answer it differently,
+        /// so the difference says nothing about the model. Not a failure.
+        case sampled
         /// A request the baseline doesn't have.
         case added
         /// A request the candidate doesn't have.
@@ -108,6 +112,7 @@ public struct DriftReport: Sendable {
             case .flippedToFail: "Flipped to fail"
             case .flippedToPass: "Flipped to pass"
             case .stillFailing: "Still failing"
+            case .sampled: "Changed, randomly sampled"
             case .added: "Added"
             case .removed: "Removed"
             }
@@ -150,6 +155,17 @@ public struct DriftReport: Sendable {
 
     public func count(_ kind: Kind) -> Int {
         cases.count { $0.kind == kind }
+    }
+
+    /// Cases that call for a look: everything but unchanged and randomly sampled changes.
+    /// What `assay drift --fail-on-change` fails on.
+    public var changeCount: Int {
+        cases.count { $0.kind != .unchanged && $0.kind != .sampled }
+    }
+
+    /// Cases whose request was recorded with random sampling and no seed.
+    public var randomlySampledCount: Int {
+        cases.count { $0.request.options.isRandomlySampled }
     }
 
     /// "37 unchanged, 3 flipped to fail, 1 flipped to pass". Counts, not percentages: a
@@ -202,16 +218,19 @@ public struct DriftReport: Sendable {
             let new = candidate.interactions[unmatched.remove(at: position)]
             let after = (try? new.response.emitted) ?? ""
 
+            // A different answer that would be "changed" is "sampled" when the same model could
+            // have given it. Flips stay flips: the outcome matters even if sampling caused it.
+            let changed: Kind = old.request.options.isRandomlySampled ? .sampled : .changed
             let kind: Kind
             if let passes {
                 switch (passes(old.request, before), passes(new.request, after)) {
-                case (true, true): kind = before == after ? .unchanged : .changed
+                case (true, true): kind = before == after ? .unchanged : changed
                 case (true, false): kind = .flippedToFail
                 case (false, true): kind = .flippedToPass
                 case (false, false): kind = .stillFailing
                 }
             } else {
-                kind = before == after ? .unchanged : .changed
+                kind = before == after ? .unchanged : changed
             }
             cases.append(Case(
                 tape: tape, request: old.request, kind: kind, before: before, after: after,
@@ -252,6 +271,11 @@ extension DriftReport {
         if !hasChecks {
             lines.append("- No pass criterion was given, so cases are only unchanged or changed.")
         }
+        if randomlySampledCount > 0 {
+            lines.append("- **Random sampling:** \(randomlySampledCount) of \(cases.count) cases were recorded with random "
+                + "sampling and no seed. The same model can answer those differently, so their changes are listed "
+                + "apart and don't count as changes. Record with greedy sampling (or a seed) to compare models.")
+        }
         lines += ["", "**\(cases.count) cases: \(summary).**", ""]
 
         lines += ["| Result | Cases |", "|---|---|"]
@@ -272,7 +296,7 @@ extension DriftReport {
         }
 
         // The cases that need a human, most important first.
-        let order: [Kind] = [.flippedToFail, .flippedToPass, .stillFailing, .changed, .added, .removed]
+        let order: [Kind] = [.flippedToFail, .flippedToPass, .stillFailing, .changed, .added, .removed, .sampled]
         for kind in order {
             let matching = cases.filter { $0.kind == kind }
             guard !matching.isEmpty else { continue }

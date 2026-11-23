@@ -274,6 +274,12 @@ a tool whose job is exposing its own model's regressions. That's the moat.
 **Done when:** after an OS update I run one command and get "37 unchanged, 3 flipped to
 fail, 1 flipped to pass", with diffs, and the CI gate fails on the 3.
 
+**Status (2026-11-23):** everything above is built; what's missing is a real model change.
+macOS 27.2 → 27.2.1 kept the on-device model. Private Cloud Compute is the likelier first
+change: its model is versioned on Apple's servers (its tapes record `instruct_server_v2`
+asset IDs) and can change with no OS update. Next step: a drift mode in
+`Examples/PickTwo/RecorderHost`, run every so often against the PCC tapes.
+
 **Traps**
 - Calling every wording change a regression. Drift that still passes is information, not
   failure.

@@ -13,7 +13,8 @@ let usage = """
           --update           replace each tape with the new answers; if the model
                              changed, the old tape is kept under generations/
           --report <file>    also write the report, as Markdown, to a file
-          --fail-on-change   exit with status 1 if any answer changed
+          --fail-on-change   exit with status 1 if any answer changed (changes to requests
+                             recorded with random sampling and no seed don't count)
 
     assay compare <baseline tape> <candidate tape> [--report <file>] [--fail-on-change]
         Compares two tape files. Calls no model.
@@ -99,5 +100,4 @@ if let reportPath {
     }
 }
 
-let changed = report.cases.count - report.count(.unchanged)
-exit(failOnChange && changed > 0 ? 1 : 0)
+exit(failOnChange && report.changeCount > 0 ? 1 : 0)
